@@ -1,0 +1,151 @@
+/* Prefixo .mt- isola estilos do MFE Matrícula */
+
+.mt-root {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  color: var(--color-text, #1A202C);
+  background: var(--color-bg, #F0F4F8);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Tabs ── */
+.mt-tabs {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--color-surface, #fff);
+  border-bottom: 1px solid var(--color-border, #E2E8F0);
+  padding: 0 20px; flex-shrink: 0;
+}
+.mt-tab {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 14px; font-weight: 500; color: var(--color-text-secondary, #718096);
+  padding: 14px 16px; border-bottom: 2px solid transparent; transition: all 0.15s;
+}
+.mt-tab:hover { color: var(--color-primary, #1B3A6B); }
+.mt-tab--active { color: var(--color-primary, #1B3A6B); border-bottom-color: var(--color-primary, #1B3A6B); font-weight: 600; }
+.mt-tabs-info { margin-left: auto; font-size: 12px; color: var(--color-text-muted, #A0AEC0); }
+
+.mt-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ── Section ── */
+.mt-section-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.mt-section-sub { font-size: 13px; color: var(--color-text-secondary, #718096); margin-bottom: 20px; }
+
+/* ── Grade visual ── */
+.mt-legenda {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+}
+.mt-leg-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--color-text-secondary, #718096);
+}
+.mt-leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+.mt-grade-wrap { overflow-x: auto; }
+.mt-grid-outer { min-width: 600px; }
+
+.mt-grid-header {
+  display: flex; border-bottom: 2px solid var(--color-border, #E2E8F0);
+  background: var(--color-surface-alt, #F7F9FC);
+}
+.mt-grid-corner { width: 52px; flex-shrink: 0; }
+.mt-grid-day {
+  flex: 1; text-align: center; padding: 10px 4px;
+  font-size: 13px; font-weight: 700; color: var(--color-text, #1A202C);
+}
+
+.mt-grid-body { display: flex; }
+.mt-grid-times {
+  width: 52px; flex-shrink: 0;
+  border-right: 1px solid var(--color-border, #E2E8F0);
+  background: var(--color-surface-alt, #F7F9FC);
+}
+.mt-grid-time {
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 4px; font-size: 11px; color: var(--color-text-muted, #A0AEC0);
+  border-bottom: 1px solid var(--color-border, #E2E8F0);
+}
+
+.mt-grid-col {
+  flex: 1; position: relative; border-right: 1px solid var(--color-border, #E2E8F0);
+}
+.mt-grid-col:last-child { border-right: none; }
+.mt-grid-cell { border-bottom: 1px solid var(--color-border, #E2E8F0); }
+
+.mt-aula {
+  position: absolute; left: 3px; right: 3px;
+  border-radius: 6px; padding: 4px 6px;
+  display: flex; flex-direction: column; gap: 1px;
+  cursor: default; opacity: 0.92;
+  overflow: hidden;
+}
+.mt-aula:hover { opacity: 1; z-index: 2; }
+.mt-aula-sigla { font-size: 12px; font-weight: 700; color: white; line-height: 1; }
+.mt-aula-hora  { font-size: 10px; color: rgba(255,255,255,0.85); }
+.mt-aula-sala  { font-size: 10px; color: rgba(255,255,255,0.75); }
+
+/* ── Matrícula Table ── */
+.mt-mat-info {
+  font-size: 13px; color: var(--color-text-secondary);
+  background: var(--color-surface, #fff); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 16px;
+}
+.mt-table-wrap {
+  background: var(--color-surface, #fff);
+  border-radius: var(--radius-lg, 12px);
+  border: 1px solid var(--color-border, #E2E8F0);
+  overflow: auto; box-shadow: var(--shadow-sm);
+}
+.mt-table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+.mt-table thead tr { background: var(--color-surface-alt); border-bottom: 1px solid var(--color-border); }
+.mt-table th { padding: 11px 14px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-text-secondary); }
+.mt-table td { padding: 11px 14px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.mt-table tbody tr:last-child td { border-bottom: none; }
+.mt-table tbody tr:hover { background: var(--color-surface-alt); }
+.mt-row-selected { background: #EBF2FF !important; }
+.mt-check { width: 16px; height: 16px; cursor: pointer; accent-color: var(--color-primary); }
+
+.mt-disc-name { font-weight: 600; }
+.mt-disc-code { font-size: 11px; color: var(--color-text-muted); }
+.mt-prof { color: var(--color-text-secondary); font-size: 12px; }
+.mt-horario { color: var(--color-text-secondary); font-size: 12px; }
+.mt-ch { text-align: center; color: var(--color-text-secondary); }
+.mt-prereq { font-size: 12px; color: var(--color-text-secondary); font-family: monospace; }
+
+.mt-vagas { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); }
+.mt-vagas-ok        { color: #38A169; background: #F0FFF4; }
+.mt-vagas-poucas    { color: #D69E2E; background: #FFFFF0; }
+.mt-vagas-esgotadas { color: #E53E3E; background: #FFF5F5; }
+
+.mt-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px; padding: 12px 4px;
+}
+.mt-footer-info { font-size: 13px; color: var(--color-text-secondary); }
+.mt-btn {
+  height: 40px; border: none; border-radius: var(--radius-md);
+  padding: 0 20px; font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.mt-btn-primary { background: var(--color-primary); color: white; }
+.mt-btn-primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.mt-btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.mt-btn-sec { background: var(--color-surface-alt); color: var(--color-primary); border: 1px solid var(--color-border); }
+
+.mt-confirm-box {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border); padding: 40px 32px; text-align: center;
+  box-shadow: var(--shadow-md);
+}
+.mt-confirm-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--color-success-bg); color: var(--color-success);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 700;
+}
+.mt-confirm-box h3 { font-size: 18px; font-weight: 700; }
+.mt-confirm-box p { font-size: 13px; color: var(--color-text-secondary); }
+.mt-confirm-note { font-size: 12px !important; color: var(--color-text-muted) !important; }
