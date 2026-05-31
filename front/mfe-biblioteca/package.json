@@ -1,0 +1,13 @@
+{
+  "name": "mfe-biblioteca",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite --port 3003",
+    "build": "vite build",
+    "preview": "vite preview --port 3003"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
