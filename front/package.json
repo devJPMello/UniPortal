@@ -1,0 +1,18 @@
+{
+  "name": "uniportal",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "design-system",
+    "shell",
+    "mfe-academico",
+    "mfe-matricula",
+    "mfe-biblioteca",
+    "mfe-financeiro"
+  ],
+  "scripts": {
+    "build:remotes": "npm run build --workspace=mfe-academico && npm run build --workspace=mfe-matricula",
+    "start": "node start.js",
+    "install:all": "npm install"
+  }
+}

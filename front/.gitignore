@@ -1,0 +1,19 @@
+# ── Dependências ─────────────────────────────────────
+node_modules/
+
+# ── Build / dist ─────────────────────────────────────
+dist/
+.vite/
+
+# ── TypeScript ────────────────────────────────────────
+*.tsbuildinfo
+node_modules/.tmp/
+
+# ── Variáveis de ambiente ─────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Logs ─────────────────────────────────────────────
+*.log
+npm-debug.log*

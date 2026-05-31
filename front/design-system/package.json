@@ -1,0 +1,8 @@
+{
+  "name": "@uniportal/design-system",
+  "version": "1.0.0",
+  "exports": {
+    "./tokens.css": "./src/tokens.css"
+  },
+  "files": ["src"]
+}
