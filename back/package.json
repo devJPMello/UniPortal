@@ -1,0 +1,18 @@
+{
+  "name": "uniportal-back",
+  "version": "1.0.0",
+  "description": "API do UniPortal — serviços acadêmicos",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  }
+}
