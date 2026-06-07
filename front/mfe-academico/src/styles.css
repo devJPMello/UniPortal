@@ -86,6 +86,11 @@
 .ac-disc-name { font-weight: 600; font-size: 13px; }
 .ac-disc-code { font-size: 11px; color: var(--color-text-muted, #A0AEC0); margin-top: 2px; }
 .ac-prof  { color: var(--color-text-secondary, #718096); font-size: 12px; }
+.ac-table th:nth-child(3),
+.ac-table th:nth-child(4),
+.ac-table th:nth-child(5),
+.ac-table th:nth-child(6) { text-align: center; }
+
 .ac-nota  { text-align: center; font-weight: 600; font-size: 14px; }
 .ac-nota-media { color: var(--color-primary, #1B3A6B); }
 .ac-nota-low  { color: var(--color-error, #E53E3E) !important; }

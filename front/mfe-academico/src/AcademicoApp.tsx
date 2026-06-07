@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Boletim from './components/Boletim'
 import Historico from './components/Historico'
+import { useAcademico } from './hooks/useAcademico'
 import '@uniportal/design-system/tokens.css'
 import './styles.css'
 
@@ -12,8 +13,8 @@ type Tab = 'boletim' | 'historico'
 
 export default function AcademicoApp({ token }: Props) {
   const [tab, setTab] = useState<Tab>('boletim')
+  const { boletim, historico, periodoAtual, loading, erro } = useAcademico(token)
 
-  // Decodifica o usuário do token (para exibição contextual)
   let ra = 'Aluno'
   try {
     if (token) ra = (JSON.parse(atob(token)) as { ra: string }).ra
@@ -35,11 +36,18 @@ export default function AcademicoApp({ token }: Props) {
           Histórico Escolar
         </button>
         <span className="ac-tabs-info">RA: {ra}</span>
+        {loading && <span className="ac-tabs-info" style={{ color: '#718096' }}>Carregando...</span>}
       </div>
 
+      {erro && (
+        <div style={{ padding: '8px 16px', background: '#FFFBEB', color: '#92400E', fontSize: '13px', borderBottom: '1px solid #FDE68A' }}>
+          {erro}
+        </div>
+      )}
+
       <div className="ac-content">
-        {tab === 'boletim'   && <Boletim />}
-        {tab === 'historico' && <Historico />}
+        {tab === 'boletim'   && <Boletim disciplinas={boletim} periodo={periodoAtual} />}
+        {tab === 'historico' && <Historico semestres={historico} />}
       </div>
     </div>
   )

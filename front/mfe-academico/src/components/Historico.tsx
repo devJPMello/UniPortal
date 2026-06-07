@@ -1,4 +1,8 @@
-import { historico, type Disciplina } from '../data/mockData'
+import { type SemestreHistorico, type Disciplina } from '../data/mockData'
+
+interface Props {
+  semestres: SemestreHistorico[]
+}
 
 function media(d: Disciplina) {
   if (d.av1 !== null && d.av2 !== null) return ((d.av1 + d.av2) / 2).toFixed(1)
@@ -10,10 +14,11 @@ const situacaoStyle: Record<string, { color: string; bg: string }> = {
   'Reprovado': { color: '#E53E3E', bg: '#FFF5F5' },
 }
 
-export default function Historico() {
-  const totalAprovadas  = historico.flatMap((s) => s.disciplinas).filter((d) => d.situacao === 'Aprovado').length
-  const totalReprovadas = historico.flatMap((s) => s.disciplinas).filter((d) => d.situacao === 'Reprovado').length
-  const chTotal = historico.flatMap((s) => s.disciplinas).filter((d) => d.situacao === 'Aprovado').reduce((a, d) => a + d.ch, 0)
+export default function Historico({ semestres }: Props) {
+  const todas         = semestres.flatMap((s) => s.disciplinas)
+  const totalAprovadas  = todas.filter((d) => d.situacao === 'Aprovado').length
+  const totalReprovadas = todas.filter((d) => d.situacao === 'Reprovado').length
+  const chTotal         = todas.filter((d) => d.situacao === 'Aprovado').reduce((a, d) => a + d.ch, 0)
 
   return (
     <div className="ac-section">
@@ -36,7 +41,7 @@ export default function Historico() {
         </div>
       </div>
 
-      {historico.map((sem) => (
+      {semestres.map((sem) => (
         <div key={sem.periodo} className="ac-hist-sem">
           <h3 className="ac-hist-periodo">{sem.periodo}</h3>
           <div className="ac-table-wrap">

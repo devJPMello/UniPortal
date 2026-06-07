@@ -1,4 +1,9 @@
-import { semAtual, type Disciplina } from '../data/mockData'
+import { type Disciplina } from '../data/mockData'
+
+interface Props {
+  disciplinas: Disciplina[]
+  periodo: string
+}
 
 function media(d: Disciplina) {
   if (d.av1 !== null && d.av2 !== null) return ((d.av1 + d.av2) / 2).toFixed(1)
@@ -16,11 +21,11 @@ const situacaoStyle: Record<string, { color: string; bg: string }> = {
   'Reprovado': { color: '#E53E3E', bg: '#FFF5F5' },
 }
 
-export default function Boletim() {
+export default function Boletim({ disciplinas, periodo }: Props) {
   return (
     <div className="ac-section">
       <div className="ac-section-header">
-        <h2 className="ac-section-title">Boletim — 2024.2</h2>
+        <h2 className="ac-section-title">Boletim — {periodo}</h2>
         <span className="ac-sem-badge">Semestre em Curso</span>
       </div>
 
@@ -38,8 +43,8 @@ export default function Boletim() {
             </tr>
           </thead>
           <tbody>
-            {semAtual.map((d) => {
-              const { color, bg } = situacaoStyle[d.situacao]
+            {disciplinas.map((d) => {
+              const { color, bg } = situacaoStyle[d.situacao] ?? { color: '#718096', bg: '#F7FAFC' }
               return (
                 <tr key={d.codigo}>
                   <td>
