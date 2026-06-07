@@ -1,6 +1,6 @@
-// Lê o token SSO passado pelo shell via URL param
-const params = new URLSearchParams(location.search)
-const token  = params.get('token') ?? ''
+const params  = new URLSearchParams(location.search)
+const token   = params.get('token') ?? ''
+const API_URL = import.meta.env.VITE_API_URL
 
 let user = { ra: '—', nome: 'Visitante' }
 try {
@@ -10,27 +10,27 @@ try {
 document.getElementById('lib-user').textContent =
   `Aluno(a): ${user.nome} · RA: ${user.ra}`
 
-// ── Dados mockados ──────────────────────────────────
-const emprestimosAtivos = [
-  { id: 1, titulo: 'Clean Code', autor: 'Robert C. Martin', isbn: '978-0132350884', emprestado: '15/10/2024', devolucao: '29/10/2024', status: 'atrasado', icon: '📕' },
-  { id: 2, titulo: 'The Pragmatic Programmer', autor: 'David Thomas, Andrew Hunt', isbn: '978-0135957059', emprestado: '18/10/2024', devolucao: '01/11/2024', status: 'ativo', icon: '📗' },
+// ── Dados mockados (fallback) ─────────────────────────
+let emprestimosAtivos = [
+  { id: 1, titulo: 'Clean Code',               autor: 'Robert C. Martin',         isbn: '978-0132350884', emprestado: '15/10/2024', devolucao: '29/10/2024', status: 'atrasado', icon: '📕' },
+  { id: 2, titulo: 'The Pragmatic Programmer', autor: 'David Thomas, Andrew Hunt', isbn: '978-0135957059', emprestado: '18/10/2024', devolucao: '01/11/2024', status: 'ativo',    icon: '📗' },
 ]
 
-const historicoLivros = [
-  { titulo: 'Design Patterns', autor: 'Gang of Four', emprestado: '01/09/2024', devolvido: '15/09/2024', icon: '📘' },
-  { titulo: 'Refactoring', autor: 'Martin Fowler', emprestado: '10/07/2024', devolvido: '24/07/2024', icon: '📙' },
-  { titulo: 'Domain-Driven Design', autor: 'Eric Evans', emprestado: '05/05/2024', devolvido: '19/05/2024', icon: '📒' },
+let historicoLivros = [
+  { titulo: 'Design Patterns',      autor: 'Gang of Four',  emprestado: '01/09/2024', devolvido: '15/09/2024', icon: '📘' },
+  { titulo: 'Refactoring',          autor: 'Martin Fowler', emprestado: '10/07/2024', devolvido: '24/07/2024', icon: '📙' },
+  { titulo: 'Domain-Driven Design', autor: 'Eric Evans',    emprestado: '05/05/2024', devolvido: '19/05/2024', icon: '📒' },
 ]
 
-const catalogo = [
-  { titulo: 'Inteligência Artificial: Uma Abordagem Moderna', autor: 'Russell & Norvig', disponivel: true  },
-  { titulo: 'Redes de Computadores', autor: 'Andrew Tanenbaum', disponivel: true  },
-  { titulo: 'Engenharia de Software', autor: 'Ian Sommerville', disponivel: false },
-  { titulo: 'Introduction to Algorithms', autor: 'Cormen et al.', disponivel: true  },
-  { titulo: 'Computer Organization', autor: 'Patterson & Hennessy', disponivel: false },
+let catalogo = [
+  { titulo: 'Inteligência Artificial: Uma Abordagem Moderna', autor: 'Russell & Norvig',     disponivel: true  },
+  { titulo: 'Redes de Computadores',                          autor: 'Andrew Tanenbaum',     disponivel: true  },
+  { titulo: 'Engenharia de Software',                         autor: 'Ian Sommerville',      disponivel: false },
+  { titulo: 'Introduction to Algorithms',                     autor: 'Cormen et al.',        disponivel: true  },
+  { titulo: 'Computer Organization',                          autor: 'Patterson & Hennessy', disponivel: false },
 ]
 
-// ── Renderiza empréstimos ativos ─────────────────────
+// ── Renderização ─────────────────────────────────────
 function renderEmprestimos() {
   const el = document.getElementById('tab-emprestimos')
   if (!emprestimosAtivos.length) {
@@ -51,7 +51,6 @@ function renderEmprestimos() {
   `).join('')
 }
 
-// ── Renderiza histórico ──────────────────────────────
 function renderHistorico() {
   const el = document.getElementById('tab-historico')
   el.innerHTML = historicoLivros.map((l) => `
@@ -67,7 +66,6 @@ function renderHistorico() {
   `).join('')
 }
 
-// ── Renderiza pesquisa ───────────────────────────────
 function renderPesquisa(filtro = '') {
   const el = document.getElementById('tab-pesquisa')
   const lista = filtro
@@ -96,7 +94,7 @@ function renderPesquisa(filtro = '') {
   `
 }
 
-// ── Ações ────────────────────────────────────────────
+// ── Ações ─────────────────────────────────────────────
 window.showTab = function(tab) {
   document.querySelectorAll('.lib-section').forEach((el) => el.classList.remove('visible'))
   document.querySelectorAll('.lib-tab').forEach((el) => el.classList.remove('active'))
@@ -104,7 +102,7 @@ window.showTab = function(tab) {
   event.target.classList.add('active')
 }
 
-window.renovar = function(id) {
+window.renovar = function(_id) {
   const toast = document.getElementById('toast')
   toast.classList.add('show')
   setTimeout(() => toast.classList.remove('show'), 2500)
@@ -122,7 +120,24 @@ window.buscar = function() {
   renderPesquisa(filtro)
 }
 
-// ── Init ─────────────────────────────────────────────
-renderEmprestimos()
-renderHistorico()
-renderPesquisa()
+// ── Inicialização com fetch à API ─────────────────────
+async function init() {
+  if (API_URL && token) {
+    try {
+      const res  = await fetch(`${API_URL}/api/biblioteca/emprestimos`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (data.sucesso) {
+        emprestimosAtivos = data.dados.emprestimosAtivos
+        historicoLivros   = data.dados.historico
+        catalogo          = data.dados.catalogo
+      }
+    } catch { /* mantém mock */ }
+  }
+  renderEmprestimos()
+  renderHistorico()
+  renderPesquisa()
+}
+
+init()

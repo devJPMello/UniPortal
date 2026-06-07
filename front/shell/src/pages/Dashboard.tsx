@@ -7,16 +7,16 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 
 const stats = [
-  { icon: GraduationCap, label: 'Disciplinas em Curso', value: '5',        detail: '2024.2',        color: '#2E5DA8', bg: '#EBF2FF', to: '/academico'  },
+  { icon: GraduationCap, label: 'Disciplinas em Curso', value: '5',        detail: '2026.1',        color: '#2E5DA8', bg: '#EBF2FF', to: '/academico'  },
   { icon: CalendarDays,  label: 'Aulas esta semana',    value: '18h',      detail: '9 aulas',       color: '#805AD5', bg: '#FAF5FF', to: '/matricula'  },
   { icon: BookOpen,      label: 'Empréstimos Ativos',   value: '2',        detail: '1 com atraso',  color: '#38A169', bg: '#F0FFF4', to: '/biblioteca' },
   { icon: CreditCard,    label: 'Boleto Pendente',      value: 'R$ 1.850', detail: 'Vence em 5 dias', color: '#D69E2E', bg: '#FFFFF0', to: '/financeiro' },
 ]
 
 const alerts = [
-  { icon: AlertCircle, urgency: 'error',   text: 'Boleto de Novembro/2024 vence em 5 dias',      chip: '5 dias',    to: '/financeiro' },
-  { icon: Clock,       urgency: 'warning', text: 'Matrícula para 2025.1 abre em 20/11/2024',     chip: '15 dias',   to: '/matricula'  },
-  { icon: CheckCircle, urgency: 'success', text: 'Prova AV2 de Estruturas de Dados: 18/11/2024', chip: '18/11',     to: '/academico'  },
+  { icon: AlertCircle, urgency: 'error',   text: 'Boleto de Junho/2026 vence em 5 dias',        chip: '5 dias',    to: '/financeiro' },
+  { icon: Clock,       urgency: 'warning', text: 'Matrícula para 2026.2 abre em 20/06/2026',     chip: '15 dias',   to: '/matricula'  },
+  { icon: CheckCircle, urgency: 'success', text: 'Prova AV2 de Estruturas de Dados: 18/06/2026', chip: '18/06',     to: '/academico'  },
 ]
 
 const modules = [
@@ -94,7 +94,7 @@ export default function Dashboard() {
         </div>
 
         <div className="db-banner-tags">
-          <span className="db-banner-tag">2024.2 em curso</span>
+          <span className="db-banner-tag">2026.1 em curso</span>
           <span className="db-banner-tag">{user?.email}</span>
         </div>
       </div>

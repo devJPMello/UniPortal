@@ -1,8 +1,10 @@
 import { useAuth } from '../auth/AuthContext'
 
+const FINANCEIRO_URL = import.meta.env.VITE_FINANCEIRO_URL || 'http://localhost:3004'
+
 export default function FinanceiroPage() {
   const { token } = useAuth()
-  const src = `http://localhost:3004?token=${encodeURIComponent(token ?? '')}`
+  const src = `${FINANCEIRO_URL}?token=${encodeURIComponent(token ?? '')}`
 
   return (
     <div className="mfe-container">

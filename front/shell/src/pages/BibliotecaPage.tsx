@@ -1,8 +1,10 @@
 import { useAuth } from '../auth/AuthContext'
 
+const BIBLIOTECA_URL = import.meta.env.VITE_BIBLIOTECA_URL || 'http://localhost:3003'
+
 export default function BibliotecaPage() {
   const { token } = useAuth()
-  const src = `http://localhost:3003?token=${encodeURIComponent(token ?? '')}`
+  const src = `${BIBLIOTECA_URL}?token=${encodeURIComponent(token ?? '')}`
 
   return (
     <div className="mfe-container">
