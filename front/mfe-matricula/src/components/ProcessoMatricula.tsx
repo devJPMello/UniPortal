@@ -1,11 +1,18 @@
 import { useState } from 'react'
-import { disciplinasDisponiveis, grade, type DisciplinaDisponivel } from '../data/mockData'
+import { type DisciplinaDisponivel, type Aula } from '../data/mockData'
 
-const matriculadas = [...new Set(grade.map((a) => a.disciplina))]
+interface Props {
+  disponiveis: DisciplinaDisponivel[]
+  gradeAtual: Aula[]
+  onConfirmar: (codigos: string[]) => Promise<{ sucesso: boolean; mensagem: string }>
+}
 
-export default function ProcessoMatricula() {
-  const [carrinho, setCarrinho] = useState<string[]>([])
-  const [confirmado, setConfirmado] = useState(false)
+export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar }: Props) {
+  const [carrinho,    setCarrinho]    = useState<string[]>([])
+  const [confirmado,  setConfirmado]  = useState(false)
+  const [confirmando, setConfirmando] = useState(false)
+
+  const matriculadas = [...new Set(gradeAtual.map((a) => a.disciplina))]
 
   function toggle(codigo: string) {
     setCarrinho((prev) =>
@@ -13,16 +20,19 @@ export default function ProcessoMatricula() {
     )
   }
 
-  function confirmar() {
+  async function confirmar() {
     if (carrinho.length === 0) return
-    setConfirmado(true)
+    setConfirmando(true)
+    const result = await onConfirmar(carrinho)
+    setConfirmando(false)
+    if (result.sucesso) setConfirmado(true)
   }
 
   const vagasLivres = (d: DisciplinaDisponivel) => d.vagas - d.vagasOcupadas
 
   return (
     <div className="mt-section">
-      <h2 className="mt-section-title">Processo de Matrícula — 2025.1</h2>
+      <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
       <p className="mt-section-sub">Selecione as disciplinas para o próximo semestre. Vagas sujeitas à disponibilidade.</p>
 
       {confirmado ? (
@@ -30,7 +40,7 @@ export default function ProcessoMatricula() {
           <div className="mt-confirm-icon">✓</div>
           <h3>Pré-matrícula enviada!</h3>
           <p>Disciplinas selecionadas: <strong>{carrinho.join(', ')}</strong></p>
-          <p className="mt-confirm-note">O resultado será divulgado em 25/11/2024.</p>
+          <p className="mt-confirm-note">O resultado será divulgado em 25/06/2026.</p>
           <button className="mt-btn mt-btn-sec" onClick={() => { setConfirmado(false); setCarrinho([]) }}>
             Nova seleção
           </button>
@@ -55,10 +65,10 @@ export default function ProcessoMatricula() {
                 </tr>
               </thead>
               <tbody>
-                {disciplinasDisponiveis.map((d) => {
-                  const livres = vagasLivres(d)
+                {disponiveis.map((d) => {
+                  const livres   = vagasLivres(d)
                   const selected = carrinho.includes(d.codigo)
-                  const semVaga = livres === 0
+                  const semVaga  = livres === 0
                   return (
                     <tr key={d.codigo} className={selected ? 'mt-row-selected' : ''}>
                       <td>
@@ -98,10 +108,10 @@ export default function ProcessoMatricula() {
             </span>
             <button
               className="mt-btn mt-btn-primary"
-              disabled={carrinho.length === 0}
+              disabled={carrinho.length === 0 || confirmando}
               onClick={confirmar}
             >
-              Confirmar Pré-matrícula
+              {confirmando ? 'Enviando...' : 'Confirmar Pré-matrícula'}
             </button>
           </div>
         </>

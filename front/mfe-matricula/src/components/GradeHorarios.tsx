@@ -1,16 +1,20 @@
-import { grade } from '../data/mockData'
+import { type Aula } from '../data/mockData'
+
+interface Props {
+  grade: Aula[]
+  periodo: string
+}
 
 const DIAS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex']
 const HORAS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 const CELL_H = 44 // px por hora
 
-export default function GradeHorarios() {
+export default function GradeHorarios({ grade, periodo }: Props) {
   return (
     <div className="mt-section">
-      <h2 className="mt-section-title">Grade de Horários — 2024.2</h2>
+      <h2 className="mt-section-title">Grade de Horários — {periodo}</h2>
 
       <div className="mt-grade-wrap">
-        {/* Legenda de disciplinas */}
         <div className="mt-legenda">
           {[...new Map(grade.map((a) => [a.disciplina, a])).values()].map((a) => (
             <span key={a.id} className="mt-leg-item">
@@ -20,9 +24,7 @@ export default function GradeHorarios() {
           ))}
         </div>
 
-        {/* Timetable grid */}
         <div className="mt-grid-outer">
-          {/* Header de dias */}
           <div className="mt-grid-header">
             <div className="mt-grid-corner" />
             {DIAS.map((d) => (
@@ -30,9 +32,7 @@ export default function GradeHorarios() {
             ))}
           </div>
 
-          {/* Corpo */}
           <div className="mt-grid-body" style={{ height: HORAS.length * CELL_H }}>
-            {/* Coluna de horas */}
             <div className="mt-grid-times">
               {HORAS.map((h) => (
                 <div key={h} className="mt-grid-time" style={{ height: CELL_H }}>
@@ -41,19 +41,16 @@ export default function GradeHorarios() {
               ))}
             </div>
 
-            {/* Colunas dos dias */}
             {DIAS.map((_, dIdx) => {
               const diaNum = (dIdx + 1) as 1 | 2 | 3 | 4 | 5
               const aulasNoDia = grade.filter((a) => a.dia === diaNum)
               return (
                 <div key={dIdx} className="mt-grid-col" style={{ height: HORAS.length * CELL_H }}>
-                  {/* Linhas de grade */}
                   {HORAS.map((h) => (
                     <div key={h} className="mt-grid-cell" style={{ height: CELL_H }} />
                   ))}
-                  {/* Aulas */}
                   {aulasNoDia.map((aula) => {
-                    const top = (aula.inicio - HORAS[0]) * CELL_H
+                    const top    = (aula.inicio - HORAS[0]) * CELL_H
                     const height = aula.duracao * CELL_H - 4
                     return (
                       <div
