@@ -3,16 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "workspaces": [
-    "design-system",
     "shell",
-    "mfe-academico",
-    "mfe-matricula",
-    "mfe-biblioteca",
-    "mfe-financeiro"
+    "design-system",
+    "back",
+    "academico/front",
+    "matricula/front",
+    "biblioteca/front",
+    "financeiro/front"
   ],
   "scripts": {
     "build:remotes": "npm run build --workspace=mfe-academico && npm run build --workspace=mfe-matricula && npm run build --workspace=mfe-biblioteca && npm run build --workspace=mfe-financeiro",
-    "start": "node start.js",
+    "setup:db": "npm run setup --workspace=@uniportal/back",
+    "start": "node infra/start.js",
     "install:all": "npm install"
   }
 }
