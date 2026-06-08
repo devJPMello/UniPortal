@@ -19,5 +19,6 @@ export default defineConfig({
     minify: false,
     cssCodeSplit: false,
   },
-  preview: { port: 3002 },
+  server:  { port: 3002, cors: true },
+  preview: { port: 3002, cors: true },
 })
