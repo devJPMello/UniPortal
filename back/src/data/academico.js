@@ -15,14 +15,14 @@ export async function getBoletim(ra) {
     ra,
     periodo: rows[0]?.periodo ?? '2024.2',
     disciplinas: rows.map((r) => ({
-      codigo:   r.codigo,
-      nome:     r.nome,
-      professor:r.professor,
-      ch:       r.ch,
-      av1:      r.av1   !== null ? Number(r.av1)   : null,
-      av2:      r.av2   !== null ? Number(r.av2)   : null,
-      situacao: r.situacao,
-      faltas:   r.faltas,
+      codigo:    r.codigo,
+      nome:      r.nome,
+      professor: r.professor,
+      ch:        r.ch,
+      av1:       r.av1 !== null ? Number(r.av1) : null,
+      av2:       r.av2 !== null ? Number(r.av2) : null,
+      situacao:  r.situacao,
+      faltas:    r.faltas,
     })),
   }
 }

@@ -6,7 +6,6 @@ async function seed() {
   try {
     await client.query('BEGIN')
 
-    // ── Limpa tudo na ordem correta (respeita foreign keys) ──────────────────
     await client.query(`
       TRUNCATE TABLE
         pre_matriculas,
@@ -22,13 +21,11 @@ async function seed() {
       RESTART IDENTITY CASCADE
     `)
 
-    // ── Aluno ────────────────────────────────────────────────────────────────
     await client.query(`
       INSERT INTO alunos (ra, nome, curso, semestre, email) VALUES
         ('2024001', 'João Pedro Mello', 'Ciência da Computação', '4º Semestre', 'joao.mello@uni.edu.br')
     `)
 
-    // ── Disciplinas (catálogo completo: históricas + atuais) ─────────────────
     await client.query(`
       INSERT INTO disciplinas (codigo, nome, professor, ch, sigla) VALUES
         ('CC101', 'Introdução à Computação',          'Prof. Dr. Carlos Lima',       60,  NULL),
@@ -50,7 +47,6 @@ async function seed() {
         ('CC405', 'Computação em Nuvem',              'Prof. Dra. Maria Silva',      60,  'CN')
     `)
 
-    // ── Grade de horários ────────────────────────────────────────────────────
     await client.query(`
       INSERT INTO grade_horarios (id, disciplina_codigo, dia, inicio, duracao, sala, cor) VALUES
         ('1', 'CC401', 1, 8,  2, 'Lab 3', '#3182CE'),
@@ -64,7 +60,6 @@ async function seed() {
         ('9', 'CC405', 5, 8,  4, 'Lab 5', '#E53E3E')
     `)
 
-    // ── Matrículas do semestre atual (2026.1) ────────────────────────────────
     await client.query(`
       INSERT INTO matriculas_atual (aluno_ra, disciplina_codigo, periodo, av1, av2, situacao, faltas) VALUES
         ('2024001', 'CC401', '2026.1', 8.5, NULL, 'Em Curso', 2),
@@ -74,7 +69,6 @@ async function seed() {
         ('2024001', 'CC405', '2026.1', 8.0, NULL, 'Em Curso', 0)
     `)
 
-    // ── Histórico escolar ────────────────────────────────────────────────────
     await client.query(`
       INSERT INTO historico (aluno_ra, disciplina_codigo, periodo, av1, av2, situacao) VALUES
         ('2024001', 'CC301', '2025.2', 9.0, 8.5, 'Aprovado'),
@@ -91,7 +85,6 @@ async function seed() {
         ('2024001', 'CC104', '2024.2', 9.0, 9.5, 'Aprovado')
     `)
 
-    // ── Disciplinas disponíveis para próximo semestre (2026.2) ───────────────
     await client.query(`
       INSERT INTO disciplinas_disponiveis (codigo, nome, professor, ch, vagas, vagas_ocupadas, horarios, prereq) VALUES
         ('CC501', 'Inteligência Artificial', 'Prof. Dr. Rafael Moura', 80, 40, 28, 'Seg/Qua 14h–16h', 'CC401'),
@@ -101,17 +94,15 @@ async function seed() {
         ('CC505', 'Machine Learning',        'Prof. Dra. Maria Silva', 80, 35, 20, 'Ter/Qui 14h–16h', 'CC401')
     `)
 
-    // ── Boletos financeiros ──────────────────────────────────────────────────
     await client.query(`
       INSERT INTO boletos (aluno_ra, mes, valor, vencimento, status, codigo) VALUES
-        ('2024001', 'Junho/2026',    1850.00, '05/06/2026', 'pendente', '00190.50034 56894.190000 40195.476115 7 00000185000'),
-        ('2024001', 'Maio/2026',     1850.00, '05/05/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
-        ('2024001', 'Abril/2026',    1850.00, '05/04/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
-        ('2024001', 'Março/2026',    1850.00, '05/03/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
-        ('2024001', 'Fevereiro/2026',1970.00, '05/02/2026', 'vencido',  '00190.50034 56894.190000 40195.476115 7 00000197000')
+        ('2024001', 'Junho/2026',     1850.00, '05/06/2026', 'pendente', '00190.50034 56894.190000 40195.476115 7 00000185000'),
+        ('2024001', 'Maio/2026',      1850.00, '05/05/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
+        ('2024001', 'Abril/2026',     1850.00, '05/04/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
+        ('2024001', 'Março/2026',     1850.00, '05/03/2026', 'pago',     '00190.50034 56894.190000 40195.476115 7 00000185000'),
+        ('2024001', 'Fevereiro/2026', 1970.00, '05/02/2026', 'vencido',  '00190.50034 56894.190000 40195.476115 7 00000197000')
     `)
 
-    // ── Empréstimos da biblioteca ────────────────────────────────────────────
     await client.query(`
       INSERT INTO emprestimos (aluno_ra, titulo, autor, isbn, emprestado, devolucao, devolvido, status, icon) VALUES
         ('2024001', 'Clean Code',               'Robert C. Martin',          '978-0132350884', '15/05/2026', '29/05/2026', NULL,         'atrasado', '📕'),
@@ -121,7 +112,6 @@ async function seed() {
         ('2024001', 'Domain-Driven Design',     'Eric Evans',                 NULL,             '05/02/2026', NULL,         '19/02/2026', 'devolvido','📒')
     `)
 
-    // ── Catálogo da biblioteca ───────────────────────────────────────────────
     await client.query(`
       INSERT INTO catalogo_biblioteca (titulo, autor, disponivel) VALUES
         ('Inteligência Artificial: Uma Abordagem Moderna', 'Russell & Norvig',     TRUE),

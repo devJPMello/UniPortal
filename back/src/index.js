@@ -24,5 +24,5 @@ app.use('/api/financeiro', financeiroRoutes)
 app.use('/api/biblioteca', bibliotecaRoutes)
 
 app.listen(PORT, () =>
-  console.log(`UniPortal API rodando em http://localhost:${PORT}`)
+  console.log(`UniPortal API → http://localhost:${PORT}`)
 )

@@ -74,13 +74,13 @@ async function migrate() {
       );
 
       CREATE TABLE IF NOT EXISTS boletos (
-        id         SERIAL       PRIMARY KEY,
-        aluno_ra   VARCHAR(20)  NOT NULL REFERENCES alunos(ra),
-        mes        VARCHAR(50)  NOT NULL,
+        id         SERIAL        PRIMARY KEY,
+        aluno_ra   VARCHAR(20)   NOT NULL REFERENCES alunos(ra),
+        mes        VARCHAR(50)   NOT NULL,
         valor      NUMERIC(10,2) NOT NULL,
-        vencimento VARCHAR(20)  NOT NULL,
-        status     VARCHAR(20)  NOT NULL,
-        codigo     VARCHAR(100) NOT NULL
+        vencimento VARCHAR(20)   NOT NULL,
+        status     VARCHAR(20)   NOT NULL,
+        codigo     VARCHAR(100)  NOT NULL
       );
 
       CREATE TABLE IF NOT EXISTS emprestimos (
