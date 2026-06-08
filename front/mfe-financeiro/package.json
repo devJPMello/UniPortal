@@ -2,12 +2,23 @@
   "name": "mfe-financeiro",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "vite --port 3004",
-    "build": "vite build",
-    "preview": "vite preview --port 3004"
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 3004",
+    "dev:standalone": "vite --port 3004"
+  },
+  "dependencies": {
+    "@uniportal/design-system": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "~5.6.2",
     "vite": "^5.4.10"
   }
 }

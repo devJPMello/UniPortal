@@ -1,138 +1,16 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biblioteca — Sistema Externo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Design tokens inline (sistema externo não herda CSS do shell) ── */
-    :root {
-      --font-sans: 'Inter', -apple-system, sans-serif;
-      --color-primary: #1B3A6B;
-      --color-bg: #F0F4F8;
-      --color-surface: #FFFFFF;
-      --color-surface-alt: #F7F9FC;
-      --color-border: #E2E8F0;
-      --color-text: #1A202C;
-      --color-text-secondary: #718096;
-      --color-text-muted: #A0AEC0;
-      --color-success: #38A169;
-      --color-success-bg: #F0FFF4;
-      --color-warning: #D69E2E;
-      --color-warning-bg: #FFFFF0;
-      --color-error: #E53E3E;
-      --color-error-bg: #FFF5F5;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.1);
-      --shadow-md: 0 4px 6px rgba(0,0,0,.07);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-text); font-size: 14px; line-height: 1.5; padding: 24px; }
-
-    .lib-header { margin-bottom: 20px; }
-    .lib-title { font-size: 18px; font-weight: 700; color: var(--color-primary); }
-    .lib-subtitle { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
-    .lib-user { font-size: 13px; color: var(--color-text-secondary); margin-top: 6px; }
-
-    .lib-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--color-border); margin-bottom: 20px; }
-    .lib-tab {
-      background: none; border: none; cursor: pointer; font-family: inherit;
-      font-size: 13px; font-weight: 500; color: var(--color-text-secondary);
-      padding: 10px 16px; border-bottom: 2px solid transparent; transition: all .15s;
-    }
-    .lib-tab:hover { color: var(--color-primary); }
-    .lib-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); font-weight: 600; }
-
-    .lib-section { display: none; }
-    .lib-section.visible { display: block; }
-
-    .lib-card {
-      background: var(--color-surface); border: 1px solid var(--color-border);
-      border-radius: 10px; padding: 16px; margin-bottom: 12px;
-      box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 16px;
-    }
-    .lib-book-icon {
-      width: 44px; height: 56px; border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
-    }
-    .lib-book-info { flex: 1; }
-    .lib-book-title { font-weight: 700; font-size: 15px; }
-    .lib-book-author { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
-    .lib-book-dates { font-size: 12px; color: var(--color-text-muted); margin-top: 6px; }
-    .lib-badge {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
-    }
-    .badge-ativo    { color: var(--color-success); background: var(--color-success-bg); }
-    .badge-atrasado { color: var(--color-error);   background: var(--color-error-bg);   }
-    .badge-devolvido{ color: var(--color-text-muted); background: var(--color-surface-alt); }
-
-    .lib-renovar-btn {
-      background: var(--color-primary); color: white; border: none;
-      border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
-      cursor: pointer; margin-top: 8px; font-family: inherit;
-    }
-    .lib-renovar-btn:hover { opacity: 0.88; }
-
-    .lib-empty { text-align: center; padding: 40px; color: var(--color-text-muted); font-size: 13px; }
-
-    .lib-pesquisa-box { display: flex; gap: 8px; margin-bottom: 16px; }
-    .lib-input {
-      flex: 1; height: 38px; border: 1px solid var(--color-border);
-      border-radius: 8px; padding: 0 12px; font-size: 13px; font-family: inherit;
-      outline: none; color: var(--color-text);
-    }
-    .lib-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px #EBF2FF; }
-    .lib-search-btn {
-      height: 38px; padding: 0 16px; background: var(--color-primary); color: white;
-      border: none; border-radius: 8px; font-family: inherit; font-size: 13px;
-      font-weight: 600; cursor: pointer;
-    }
-    .lib-result-card {
-      background: var(--color-surface); border: 1px solid var(--color-border);
-      border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .lib-result-name { font-weight: 600; font-size: 14px; }
-    .lib-result-sub  { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
-    .lib-reservar-btn {
-      background: none; border: 1px solid var(--color-primary); color: var(--color-primary);
-      border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: all .15s;
-    }
-    .lib-reservar-btn:hover { background: var(--color-primary); color: white; }
-
-    .lib-toast {
-      position: fixed; bottom: 20px; right: 20px;
-      background: var(--color-success); color: white;
-      padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
-      box-shadow: var(--shadow-md); display: none; z-index: 100;
-    }
-    .lib-toast.show { display: block; }
-  </style>
-</head>
-<body>
-  <div class="lib-header">
-    <div class="lib-title">📚 Biblioteca Universitária</div>
-    <div class="lib-subtitle">Sistema de Fornecedor Externo — integrado via iframe</div>
-    <div class="lib-user" id="lib-user">Carregando usuário...</div>
-  </div>
-
-  <div class="lib-tabs">
-    <button class="lib-tab active" onclick="showTab('emprestimos')">Empréstimos Ativos</button>
-    <button class="lib-tab" onclick="showTab('historico')">Histórico</button>
-    <button class="lib-tab" onclick="showTab('pesquisa')">Pesquisar / Reservar</button>
-  </div>
-
-  <div id="tab-emprestimos" class="lib-section visible"></div>
-  <div id="tab-historico"   class="lib-section"></div>
-  <div id="tab-pesquisa"    class="lib-section"></div>
-
-  <div class="lib-toast" id="toast">✓ Renovado com sucesso!</div>
-
-  <script src="/src/main.js" type="module"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biblioteca UniPortal</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

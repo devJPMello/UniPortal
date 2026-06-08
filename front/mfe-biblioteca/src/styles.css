@@ -1,0 +1,123 @@
+/* Prefixo .bl- isola estilos do MFE Biblioteca */
+
+.bl-root {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #F0F4F8;
+  color: #1A202C;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.bl-root *, .bl-root *::before, .bl-root *::after { box-sizing: border-box; }
+
+/* ── Header ── */
+.bl-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+}
+.bl-title    { font-size: 18px; font-weight: 700; color: #1B3A6B; }
+.bl-subtitle { font-size: 12px; color: #A0AEC0; margin-top: 2px; }
+.bl-user     { font-size: 13px; color: #718096; margin-top: 6px; }
+.bl-loading-dot { color: #A0AEC0; }
+
+/* ── Erro ── */
+.bl-erro {
+  padding: 8px 14px; background: #FFFBEB; color: #92400E;
+  font-size: 13px; border-radius: 8px; margin-bottom: 16px;
+  border: 1px solid #FDE68A;
+}
+
+/* ── Tabs ── */
+.bl-tabs { display: flex; gap: 0; border-bottom: 1px solid #E2E8F0; margin-bottom: 20px; }
+.bl-tab {
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: #718096; padding: 10px 16px;
+  border-bottom: 2px solid transparent; transition: all .15s;
+  position: relative;
+}
+.bl-tab:hover { color: #1B3A6B; }
+.bl-tab--active { color: #1B3A6B; border-bottom-color: #1B3A6B; font-weight: 600; }
+.bl-tab-alert {
+  display: inline-block; width: 7px; height: 7px; background: #E53E3E;
+  border-radius: 50%; margin-left: 6px; vertical-align: middle;
+}
+
+/* ── Content ── */
+.bl-content { }
+
+/* ── Cards ── */
+.bl-card {
+  background: #fff; border: 1px solid #E2E8F0;
+  border-radius: 10px; padding: 16px; margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.bl-book-icon {
+  width: 44px; height: 56px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.bl-book-info   { flex: 1; }
+.bl-book-title  { font-weight: 700; font-size: 15px; }
+.bl-book-author { font-size: 12px; color: #718096; margin-top: 2px; }
+.bl-book-isbn   { font-size: 11px; color: #A0AEC0; margin-top: 2px; }
+.bl-book-dates  { font-size: 12px; color: #A0AEC0; margin-top: 6px; }
+
+/* ── Badges ── */
+.bl-badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
+}
+.badge-ativo     { color: #38A169; background: #F0FFF4; }
+.badge-atrasado  { color: #E53E3E; background: #FFF5F5; }
+.badge-devolvido { color: #A0AEC0; background: #F7F9FC; }
+
+/* ── Botões ── */
+.bl-renovar-btn {
+  background: #1B3A6B; color: white; border: none;
+  border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; margin-top: 8px; font-family: inherit;
+}
+.bl-renovar-btn:hover { opacity: 0.88; }
+
+/* ── Empty ── */
+.bl-empty {
+  text-align: center; padding: 40px; color: #A0AEC0; font-size: 13px;
+}
+
+/* ── Pesquisa ── */
+.bl-pesquisa-box { display: flex; gap: 8px; margin-bottom: 16px; }
+.bl-input {
+  flex: 1; height: 38px; border: 1px solid #E2E8F0;
+  border-radius: 8px; padding: 0 12px; font-size: 13px; font-family: inherit;
+  outline: none; color: #1A202C; background: #fff;
+}
+.bl-input:focus { border-color: #1B3A6B; box-shadow: 0 0 0 3px #EBF2FF; }
+
+.bl-result-card {
+  background: #fff; border: 1px solid #E2E8F0;
+  border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.bl-result-name { font-weight: 600; font-size: 14px; }
+.bl-result-sub  { font-size: 12px; color: #718096; margin-top: 2px; }
+
+.bl-reservar-btn {
+  background: none; border: 1px solid #1B3A6B; color: #1B3A6B;
+  border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.bl-reservar-btn:hover:not(:disabled) { background: #1B3A6B; color: white; }
+
+/* ── Toast ── */
+.bl-toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: #38A169; color: white;
+  padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,.07); display: none; z-index: 100;
+}
+.bl-toast.show { display: block; }
