@@ -1,24 +1,50 @@
+import React, { Suspense, lazy, Component } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 
-const FINANCEIRO_URL = import.meta.env.VITE_FINANCEIRO_URL || 'http://localhost:3004'
+const FinanceiroApp = lazy(() => import('mfe_financeiro/FinanceiroApp'))
+
+interface EBState { error: Error | null }
+class MfeErrorBoundary extends Component<{ name: string; children: React.ReactNode }, EBState> {
+  state: EBState = { error: null }
+  static getDerivedStateFromError(e: Error) { return { error: e } }
+  render() {
+    if (this.state.error)
+      return (
+        <div className="mfe-error">
+          <AlertCircle size={32} color="var(--color-error)" />
+          <h3>Módulo {this.props.name} indisponível</h3>
+          <p>Certifique-se de que o serviço está rodando em <code>localhost:3004</code>.</p>
+          <pre>{this.state.error.message}</pre>
+        </div>
+      )
+    return this.props.children
+  }
+}
 
 export default function FinanceiroPage() {
   const { token } = useAuth()
-  const src = `${FINANCEIRO_URL}?token=${encodeURIComponent(token ?? '')}`
-
   return (
     <div className="mfe-container">
-      <div className="mfe-badge mfe-badge--iframe">
-        <span className="mfe-badge-dot mfe-badge-dot--yellow" />
-        Módulo Financeiro — carregado via <strong>iframe</strong>
-        &nbsp;·&nbsp; sistema da mantenedora, isolamento total de CSS/JS
+      <div className="mfe-badge">
+        <span className="mfe-badge-dot mfe-badge-dot--blue" />
+        Módulo Financeiro — carregado via <strong>Module Federation</strong>
+        &nbsp;·&nbsp; deploy independente, equipe própria
       </div>
-      <iframe
-        src={src}
-        className="mfe-iframe"
-        title="Módulo Financeiro"
-        sandbox="allow-scripts allow-same-origin allow-forms"
-      />
+      <MfeErrorBoundary name="Financeiro">
+        <Suspense fallback={<MfeFallback name="Financeiro" />}>
+          <FinanceiroApp token={token ?? undefined} />
+        </Suspense>
+      </MfeErrorBoundary>
+    </div>
+  )
+}
+
+function MfeFallback({ name }: { name: string }) {
+  return (
+    <div className="mfe-loading">
+      <div className="spinner" />
+      <p>Carregando módulo {name}...</p>
     </div>
   )
 }

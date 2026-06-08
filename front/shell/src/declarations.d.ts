@@ -11,3 +11,17 @@ declare module 'mfe_matricula/MatriculaApp' {
   const MatriculaApp: React.ComponentType<Props>
   export default MatriculaApp
 }
+
+declare module 'mfe_biblioteca/BibliotecaApp' {
+  import type React from 'react'
+  interface Props { token?: string }
+  const BibliotecaApp: React.ComponentType<Props>
+  export default BibliotecaApp
+}
+
+declare module 'mfe_financeiro/FinanceiroApp' {
+  import type React from 'react'
+  interface Props { token?: string }
+  const FinanceiroApp: React.ComponentType<Props>
+  export default FinanceiroApp
+}
