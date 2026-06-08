@@ -10,6 +10,8 @@ console.log(cyan('\n🎓 UniPortal — Iniciando demo de Micro Front-ends\n'))
 console.log(yellow('📦 Compilando MFEs remotos (Module Federation)...'))
 execSync('npm run build --workspace=mfe-academico', { stdio: 'inherit' })
 execSync('npm run build --workspace=mfe-matricula', { stdio: 'inherit' })
+execSync('npm run build --workspace=mfe-biblioteca', { stdio: 'inherit' })
+execSync('npm run build --workspace=mfe-financeiro', { stdio: 'inherit' })
 
 console.log(green('\n🚀 Iniciando todos os serviços:\n'))
 console.log('  Shell        →  http://localhost:3000')
@@ -22,8 +24,8 @@ console.log(cyan('\n🔑 Credenciais de demo: RA: 2024001 | Senha: qualquer\n'))
 const services = [
   { label: 'mfe-academico', args: ['run', 'preview', '--workspace=mfe-academico'] },
   { label: 'mfe-matricula', args: ['run', 'preview', '--workspace=mfe-matricula'] },
-  { label: 'mfe-biblioteca', args: ['run', 'dev', '--workspace=mfe-biblioteca'] },
-  { label: 'mfe-financeiro', args: ['run', 'dev', '--workspace=mfe-financeiro'] },
+  { label: 'mfe-biblioteca', args: ['run', 'preview', '--workspace=mfe-biblioteca'] },
+  { label: 'mfe-financeiro', args: ['run', 'preview', '--workspace=mfe-financeiro'] },
   { label: 'shell', args: ['run', 'dev', '--workspace=shell'] },
 ]
 

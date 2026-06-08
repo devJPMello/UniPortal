@@ -11,7 +11,7 @@
     "mfe-financeiro"
   ],
   "scripts": {
-    "build:remotes": "npm run build --workspace=mfe-academico && npm run build --workspace=mfe-matricula",
+    "build:remotes": "npm run build --workspace=mfe-academico && npm run build --workspace=mfe-matricula && npm run build --workspace=mfe-biblioteca && npm run build --workspace=mfe-financeiro",
     "start": "node start.js",
     "install:all": "npm install"
   }
