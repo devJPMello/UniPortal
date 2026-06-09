@@ -4,7 +4,13 @@ import EmprestimosAtivos from './components/EmprestimosAtivos'
 import HistoricoLivros from './components/HistoricoLivros'
 import PesquisaCatalogo from './components/PesquisaCatalogo'
 import { useBiblioteca } from './hooks/useBiblioteca'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import './styles.css'
+
+export interface EstadoEmprestimo {
+  dataAtual: string
+  renovacoes: number
+}
 
 interface Props {
   token?: string
@@ -14,6 +20,10 @@ type Tab = 'emprestimos' | 'historico' | 'pesquisa'
 
 export default function BibliotecaApp({ token }: Props) {
   const [tab, setTab] = useState<Tab>('emprestimos')
+
+  const [estados,    setEstados]   = useLocalStorage<Record<number, EstadoEmprestimo>>('bl:estados', {})
+  const [devolvidos, setDevolvidos] = useLocalStorage<number[]>('bl:devolvidos', [])
+
   const { emprestimos, historico, catalogo, loading, erro } = useBiblioteca(token)
 
   let nome = 'Visitante'
@@ -28,6 +38,9 @@ export default function BibliotecaApp({ token }: Props) {
     }
   } catch { /* token inválido */ }
 
+  const emprestimosAtivos = emprestimos.filter(e => !devolvidos.includes(e.id))
+  const temAtrasado = emprestimosAtivos.some(e => e.status === 'atrasado')
+
   return (
     <div className="bl-root">
       <div className="bl-header">
@@ -41,9 +54,7 @@ export default function BibliotecaApp({ token }: Props) {
         </div>
       </div>
 
-      {erro && (
-        <div className="bl-erro">{erro}</div>
-      )}
+      {erro && <div className="bl-erro">{erro}</div>}
 
       <div className="bl-tabs">
         <button
@@ -51,9 +62,7 @@ export default function BibliotecaApp({ token }: Props) {
           onClick={() => setTab('emprestimos')}
         >
           Empréstimos Ativos
-          {emprestimos.some((e) => e.status === 'atrasado') && (
-            <span className="bl-tab-alert" />
-          )}
+          {temAtrasado && <span className="bl-tab-alert" />}
         </button>
         <button
           className={`bl-tab${tab === 'historico' ? ' bl-tab--active' : ''}`}
@@ -70,9 +79,17 @@ export default function BibliotecaApp({ token }: Props) {
       </div>
 
       <div className="bl-content">
-        {tab === 'emprestimos' && <EmprestimosAtivos emprestimos={emprestimos} />}
-        {tab === 'historico'   && <HistoricoLivros historico={historico} />}
-        {tab === 'pesquisa'    && <PesquisaCatalogo catalogo={catalogo} />}
+        {tab === 'emprestimos' && (
+          <EmprestimosAtivos
+            emprestimos={emprestimos}
+            estados={estados}
+            devolvidos={devolvidos}
+            onEstadosChange={setEstados}
+            onDevolvidosChange={setDevolvidos}
+          />
+        )}
+        {tab === 'historico' && <HistoricoLivros historico={historico} />}
+        {tab === 'pesquisa'  && <PesquisaCatalogo catalogo={catalogo} />}
       </div>
     </div>
   )

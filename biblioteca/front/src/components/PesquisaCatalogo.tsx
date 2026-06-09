@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Search, X, Check, Bell } from 'lucide-react'
 import type { LivroCatalogo } from '../data/mockData'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 interface Props {
   catalogo: LivroCatalogo[]
@@ -9,10 +10,10 @@ interface Props {
 export default function PesquisaCatalogo({ catalogo }: Props) {
   const [filtro,     setFiltro]     = useState('')
   const [toast,      setToast]      = useState<string | null>(null)
-  const [reservados, setReservados] = useState<Set<string>>(new Set())
+  const [reservados, setReservados] = useLocalStorage<string[]>('bl:reservados', [])
 
   function reservar(titulo: string, disponivel: boolean) {
-    setReservados(prev => new Set([...prev, titulo]))
+    setReservados(prev => [...prev, titulo])
     const msg = disponivel
       ? `"${titulo}" reservado com sucesso!`
       : `Você será notificado quando "${titulo}" estiver disponível.`
@@ -66,7 +67,7 @@ export default function PesquisaCatalogo({ catalogo }: Props) {
       ) : (
         <div className="bl-catalogo-list">
           {resultados.map((l, i) => {
-            const foiReservado = reservados.has(l.titulo)
+            const foiReservado = reservados.includes(l.titulo)
             return (
               <div key={i} className="bl-result-card">
                 <div className="bl-result-accent" style={{ background: l.disponivel ? '#38A169' : '#CBD5E0' }} />

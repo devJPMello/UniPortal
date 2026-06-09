@@ -78,6 +78,7 @@
   animation: fadeIn .3s ease both;
 }
 .bl-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.10); transform: translateY(-1px); }
+.bl-card--saindo { opacity: 0; transform: translateX(24px) scale(.97); transition: opacity .4s ease, transform .4s ease; }
 
 .bl-card-spine {
   width: 5px; flex-shrink: 0;
@@ -137,14 +138,34 @@
   font-size: 12px; color: #A0AEC0; font-weight: 500; text-align: right;
 }
 
-/* ── Renovar button ── */
+/* ── Renovações tracker ── */
+.bl-renovacoes-track {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px;
+}
+.bl-renovacao-pip {
+  width: 20px; height: 4px; border-radius: 999px; background: #E2E8F0;
+  transition: background .2s;
+}
+.bl-renovacao-pip--used { background: #38A169; }
+.bl-renovacoes-txt { font-size: 11px; color: #A0AEC0; }
+
+/* ── Botões de ação ── */
 .bl-renovar-btn {
+  display: inline-flex; align-items: center; gap: 6px;
   background: #1B3A6B; color: white; border: none;
   border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
 }
-.bl-renovar-btn:hover { opacity: .88; }
-.bl-renovar-btn--ok { background: #38A169; }
+.bl-renovar-btn:hover:not(:disabled) { opacity: .88; }
+.bl-renovar-btn--disabled { background: #CBD5E0; color: #718096; cursor: not-allowed; }
+
+.bl-devolver-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 1.5px solid #E53E3E; color: #E53E3E;
+  border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+}
+.bl-devolver-btn:hover { background: #FFF5F5; }
 
 /* ── Empty ── */
 .bl-empty {
@@ -224,6 +245,86 @@
 .bl-reservar-btn--notify:hover:not(:disabled) { background: #D69E2E; color: white; }
 .bl-reservar-btn--done { background: #38A169; color: white; border-color: #38A169; cursor: default; }
 .bl-reservar-btn:disabled { opacity: 1; }
+
+/* ── Modal ── */
+.bl-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 16px; backdrop-filter: blur(2px);
+  animation: fadeIn .15s ease;
+}
+.bl-modal {
+  background: #fff; border-radius: 16px; width: 100%; max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2); overflow: hidden;
+  animation: slideUp .2s ease;
+}
+.bl-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid #E2E8F0; background: #F7F9FC;
+}
+.bl-modal-title {
+  font-size: 15px; font-weight: 700; color: #1B3A6B;
+  display: flex; align-items: center; gap: 8px;
+}
+.bl-modal-close {
+  background: none; border: none; cursor: pointer; color: #A0AEC0;
+  display: flex; align-items: center; padding: 4px; border-radius: 6px;
+  transition: all .15s;
+}
+.bl-modal-close:hover { background: #E2E8F0; color: #1A202C; }
+
+.bl-modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.bl-modal-livro {
+  display: flex; align-items: center; gap: 12px;
+  background: #F7F9FC; border-radius: 10px; padding: 12px 14px;
+}
+.bl-modal-livro-icon { color: #1B3A6B; flex-shrink: 0; }
+.bl-modal-livro-titulo { font-weight: 700; font-size: 14px; }
+.bl-modal-livro-autor  { font-size: 12px; color: #718096; margin-top: 2px; }
+
+.bl-modal-datas {
+  display: flex; align-items: center; gap: 10px;
+}
+.bl-modal-data-item {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid #E2E8F0;
+}
+.bl-modal-data-item--old { background: #FFF5F5; border-color: #FED7D7; color: #C53030; }
+.bl-modal-data-item--new { background: #F0FFF4; border-color: #C6F6D5; color: #276749; }
+.bl-modal-data-lbl { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; opacity: .7; }
+.bl-modal-data-val { display: block; font-size: 14px; font-weight: 700; margin-top: 1px; }
+.bl-modal-seta { font-size: 18px; color: #A0AEC0; flex-shrink: 0; }
+
+.bl-modal-info {
+  font-size: 12px; color: #718096; text-align: center;
+  background: #EBF8FF; border-radius: 8px; padding: 8px 12px;
+}
+.bl-modal-aviso { font-size: 13px; color: #4A5568; line-height: 1.6; }
+.bl-modal-alerta {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: #C53030; background: #FFF5F5;
+  border: 1px solid #FED7D7; border-radius: 8px; padding: 10px 12px;
+}
+
+.bl-modal-footer {
+  display: flex; gap: 10px; padding: 16px 20px;
+  border-top: 1px solid #E2E8F0; justify-content: flex-end;
+}
+.bl-modal-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 38px; padding: 0 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; transition: all .15s; border: none;
+}
+.bl-modal-btn--sec {
+  background: #F7F9FC; color: #718096; border: 1px solid #E2E8F0;
+}
+.bl-modal-btn--sec:hover { background: #E2E8F0; }
+.bl-modal-btn--primary { background: #1B3A6B; color: white; }
+.bl-modal-btn--primary:hover { background: #2E5DA8; }
+.bl-modal-btn--danger { background: #E53E3E; color: white; }
+.bl-modal-btn--danger:hover { background: #C53030; }
 
 /* ── Toast ── */
 .bl-toast {
