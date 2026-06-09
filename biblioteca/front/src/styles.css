@@ -1,5 +1,9 @@
 /* Prefixo .bl- isola estilos do MFE Biblioteca */
 
+@keyframes fadeIn  { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+@keyframes slideUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+@keyframes pulse   { 0%,100% { opacity:1 } 50% { opacity:.6 } }
+
 .bl-root {
   font-family: 'Inter', -apple-system, sans-serif;
   background: #F0F4F8;
@@ -10,32 +14,37 @@
   padding: 24px;
   box-sizing: border-box;
 }
-
 .bl-root *, .bl-root *::before, .bl-root *::after { box-sizing: border-box; }
 
 /* ── Header ── */
 .bl-header {
   display: flex; justify-content: space-between; align-items: flex-start;
   flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+  background: #fff; border-radius: 14px; padding: 18px 22px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #E2E8F0;
 }
-.bl-title    { font-size: 18px; font-weight: 700; color: #1B3A6B; }
+.bl-title    { font-size: 18px; font-weight: 700; color: #1B3A6B; display: flex; align-items: center; gap: 8px; }
 .bl-subtitle { font-size: 12px; color: #A0AEC0; margin-top: 2px; }
-.bl-user     { font-size: 13px; color: #718096; margin-top: 6px; }
-.bl-loading-dot { color: #A0AEC0; }
+.bl-user     { font-size: 13px; color: #718096; margin-top: 6px; display: flex; align-items: center; gap: 6px; }
+.bl-loading-dot { color: #A0AEC0; animation: pulse 1.2s infinite; }
 
 /* ── Erro ── */
 .bl-erro {
-  padding: 8px 14px; background: #FFFBEB; color: #92400E;
-  font-size: 13px; border-radius: 8px; margin-bottom: 16px;
-  border: 1px solid #FDE68A;
+  padding: 10px 16px; background: #FFFBEB; color: #92400E;
+  font-size: 13px; border-radius: 10px; margin-bottom: 16px;
+  border: 1px solid #FDE68A; display: flex; align-items: center; gap: 8px;
 }
 
 /* ── Tabs ── */
-.bl-tabs { display: flex; gap: 0; border-bottom: 1px solid #E2E8F0; margin-bottom: 20px; }
+.bl-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid #E2E8F0; margin-bottom: 20px;
+  background: #fff; border-radius: 12px 12px 0 0;
+  padding: 0 4px;
+}
 .bl-tab {
   background: none; border: none; cursor: pointer;
   font-family: inherit; font-size: 13px; font-weight: 500;
-  color: #718096; padding: 10px 16px;
+  color: #718096; padding: 12px 16px;
   border-bottom: 2px solid transparent; transition: all .15s;
   position: relative;
 }
@@ -44,80 +53,184 @@
 .bl-tab-alert {
   display: inline-block; width: 7px; height: 7px; background: #E53E3E;
   border-radius: 50%; margin-left: 6px; vertical-align: middle;
+  animation: pulse 1.2s infinite;
 }
 
-/* ── Content ── */
-.bl-content { }
+/* ── Overdue Banner ── */
+.bl-alert-banner {
+  display: flex; align-items: center; gap: 10px;
+  background: #FFF5F5; border: 1px solid #FED7D7; border-radius: 12px;
+  padding: 12px 16px; margin-bottom: 16px;
+  font-size: 13px; color: #C53030;
+  animation: fadeIn .3s ease;
+}
+.bl-alert-icon { font-size: 16px; flex-shrink: 0; }
 
-/* ── Cards ── */
+/* ── Cards list ── */
+.bl-cards-list { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Card ── */
 .bl-card {
-  background: #fff; border: 1px solid #E2E8F0;
-  border-radius: 10px; padding: 16px; margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.1);
-  display: flex; align-items: flex-start; gap: 16px;
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+  overflow: hidden; display: flex; align-items: stretch;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  transition: box-shadow .15s, transform .12s;
+  animation: fadeIn .3s ease both;
 }
-.bl-book-icon {
-  width: 44px; height: 56px; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; flex-shrink: 0;
+.bl-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.10); transform: translateY(-1px); }
+
+.bl-card-spine {
+  width: 5px; flex-shrink: 0;
 }
-.bl-book-info   { flex: 1; }
+.bl-card--ativo     .bl-card-spine { background: #38A169; }
+.bl-card--atrasado  .bl-card-spine { background: #E53E3E; animation: pulse 2s infinite; }
+.bl-card--devolvido .bl-card-spine { background: #A0AEC0; }
+.bl-card-spine--devolvido { background: #A0AEC0; }
+
+/* ── Book cover area ── */
+.bl-book-cover {
+  width: 52px; flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; font-size: 26px;
+  margin: 12px 0 12px 12px;
+  border-radius: 6px; height: auto;
+}
+.bl-book-cover--ativo     { background: #F0FFF4; }
+.bl-book-cover--atrasado  { background: #FFF5F5; }
+.bl-book-cover--devolvido { background: #F7F9FC; }
+.bl-book-cover-icon { line-height: 1; }
+
+/* ── Book info ── */
+.bl-book-info   { flex: 1; padding: 14px 12px; }
 .bl-book-title  { font-weight: 700; font-size: 15px; }
 .bl-book-author { font-size: 12px; color: #718096; margin-top: 2px; }
 .bl-book-isbn   { font-size: 11px; color: #A0AEC0; margin-top: 2px; }
-.bl-book-dates  { font-size: 12px; color: #A0AEC0; margin-top: 6px; }
+.bl-book-dates  {
+  display: flex; flex-direction: column; gap: 2px;
+  font-size: 12px; color: #A0AEC0; margin-top: 8px;
+}
+.bl-date--late    { color: #E53E3E; }
+.bl-date--renewed { color: #38A169; }
+.bl-renovado-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  background: #F0FFF4; color: #38A169; padding: 1px 6px;
+  border-radius: 999px; margin-left: 6px; vertical-align: middle;
+}
+
+/* ── Card right actions ── */
+.bl-card-actions {
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+  gap: 8px; padding: 14px 16px; flex-shrink: 0;
+}
 
 /* ── Badges ── */
 .bl-badge {
-  display: inline-block; font-size: 11px; font-weight: 600;
-  padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
 }
 .badge-ativo     { color: #38A169; background: #F0FFF4; }
 .badge-atrasado  { color: #E53E3E; background: #FFF5F5; }
-.badge-devolvido { color: #A0AEC0; background: #F7F9FC; }
+.badge-devolvido { color: #718096; background: #F7F9FC; }
 
-/* ── Botões ── */
+/* ── Histórico: dias emprestado ── */
+.bl-hist-dias {
+  font-size: 12px; color: #A0AEC0; font-weight: 500; text-align: right;
+}
+
+/* ── Renovar button ── */
 .bl-renovar-btn {
   background: #1B3A6B; color: white; border: none;
-  border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; margin-top: 8px; font-family: inherit;
+  border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
 }
-.bl-renovar-btn:hover { opacity: 0.88; }
+.bl-renovar-btn:hover { opacity: .88; }
+.bl-renovar-btn--ok { background: #38A169; }
 
 /* ── Empty ── */
 .bl-empty {
-  text-align: center; padding: 40px; color: #A0AEC0; font-size: 13px;
+  text-align: center; padding: 48px 24px; color: #A0AEC0; font-size: 13px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
+.bl-empty-icon { font-size: 40px; opacity: .7; }
+.bl-limpar-btn {
+  background: none; border: 1px solid #E2E8F0; color: #1B3A6B;
+  border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s; margin-top: 4px;
+}
+.bl-limpar-btn:hover { background: #EBF2FF; border-color: #1B3A6B; }
 
 /* ── Pesquisa ── */
-.bl-pesquisa-box { display: flex; gap: 8px; margin-bottom: 16px; }
-.bl-input {
-  flex: 1; height: 38px; border: 1px solid #E2E8F0;
-  border-radius: 8px; padding: 0 12px; font-size: 13px; font-family: inherit;
-  outline: none; color: #1A202C; background: #fff;
+.bl-pesquisa-header {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 16px;
 }
-.bl-input:focus { border-color: #1B3A6B; box-shadow: 0 0 0 3px #EBF2FF; }
+.bl-pesquisa-box {
+  flex: 1; min-width: 200px; display: flex; align-items: center; gap: 0;
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+  overflow: hidden; transition: border-color .15s, box-shadow .15s;
+}
+.bl-pesquisa-box:focus-within { border-color: #1B3A6B; box-shadow: 0 0 0 3px #EBF2FF; }
+.bl-pesquisa-icon { padding: 0 10px; font-size: 15px; color: #A0AEC0; }
+.bl-input {
+  flex: 1; height: 40px; border: none; padding: 0; font-size: 13px;
+  font-family: inherit; color: #1A202C; background: transparent; outline: none;
+}
+.bl-pesquisa-clear {
+  background: none; border: none; padding: 0 12px; height: 40px;
+  font-size: 13px; color: #A0AEC0; cursor: pointer; transition: color .15s;
+}
+.bl-pesquisa-clear:hover { color: #1A202C; }
+
+.bl-catalogo-stats { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+.bl-catalogo-stat { font-size: 12px; color: #718096; display: flex; align-items: center; gap: 5px; }
+.bl-stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.bl-stat-dot--ok  { background: #38A169; }
+.bl-stat-dot--off { background: #CBD5E0; }
+
+/* ── Catálogo list ── */
+.bl-catalogo-list { display: flex; flex-direction: column; gap: 8px; }
 
 .bl-result-card {
-  background: #fff; border: 1px solid #E2E8F0;
-  border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
-  display: flex; align-items: center; justify-content: space-between;
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+  display: flex; align-items: center; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  transition: box-shadow .15s, transform .12s;
+  animation: fadeIn .3s ease both;
 }
+.bl-result-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,.09); transform: translateY(-1px); }
+
+.bl-result-accent { width: 4px; align-self: stretch; flex-shrink: 0; }
+.bl-result-body { flex: 1; padding: 12px 14px; min-width: 0; }
 .bl-result-name { font-weight: 600; font-size: 14px; }
 .bl-result-sub  { font-size: 12px; color: #718096; margin-top: 2px; }
 
+.bl-result-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+  padding: 12px 14px; flex-shrink: 0;
+}
+.bl-disp-badge {
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.bl-disp-badge--ok  { color: #38A169; }
+.bl-disp-badge--off { color: #A0AEC0; }
+
 .bl-reservar-btn {
-  background: none; border: 1px solid #1B3A6B; color: #1B3A6B;
-  border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; font-family: inherit; transition: all .15s;
+  background: none; border: 1.5px solid #1B3A6B; color: #1B3A6B;
+  border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
 }
 .bl-reservar-btn:hover:not(:disabled) { background: #1B3A6B; color: white; }
+.bl-reservar-btn--notify { border-color: #D69E2E; color: #D69E2E; }
+.bl-reservar-btn--notify:hover:not(:disabled) { background: #D69E2E; color: white; }
+.bl-reservar-btn--done { background: #38A169; color: white; border-color: #38A169; cursor: default; }
+.bl-reservar-btn:disabled { opacity: 1; }
 
 /* ── Toast ── */
 .bl-toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: #38A169; color: white;
-  padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  box-shadow: 0 4px 6px rgba(0,0,0,.07); display: none; z-index: 100;
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1B3A6B; color: white;
+  padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15); display: none; z-index: 2000;
+  animation: slideUp .25s ease;
 }
 .bl-toast.show { display: block; }

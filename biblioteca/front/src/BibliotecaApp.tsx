@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Library } from 'lucide-react'
 import EmprestimosAtivos from './components/EmprestimosAtivos'
 import HistoricoLivros from './components/HistoricoLivros'
 import PesquisaCatalogo from './components/PesquisaCatalogo'
@@ -19,7 +20,9 @@ export default function BibliotecaApp({ token }: Props) {
   let ra   = '—'
   try {
     if (token) {
-      const decoded = JSON.parse(atob(token)) as { ra: string; nome: string }
+      const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+      const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+      const decoded = JSON.parse(new TextDecoder().decode(bytes)) as { ra: string; nome: string }
       nome = decoded.nome
       ra   = decoded.ra
     }
@@ -29,7 +32,7 @@ export default function BibliotecaApp({ token }: Props) {
     <div className="bl-root">
       <div className="bl-header">
         <div>
-          <div className="bl-title">📚 Biblioteca Universitária</div>
+          <div className="bl-title"><Library size={20} /> Biblioteca Universitária</div>
           <div className="bl-subtitle">Sistema de Fornecedor Externo — integrado via iframe</div>
         </div>
         <div className="bl-user">
