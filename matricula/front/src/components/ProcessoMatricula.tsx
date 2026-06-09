@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import {
+  CheckCircle, Calendar, Search, AlertTriangle, Check, X,
+  Clock, BookOpen, XCircle, ShoppingCart,
+} from 'lucide-react'
 import { type DisciplinaDisponivel, type Aula } from '../data/mockData'
 
 interface Props {
@@ -7,17 +11,53 @@ interface Props {
   onConfirmar: (codigos: string[]) => Promise<{ sucesso: boolean; mensagem: string }>
 }
 
-export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar }: Props) {
-  const [carrinho,    setCarrinho]    = useState<string[]>([])
-  const [confirmado,  setConfirmado]  = useState(false)
-  const [confirmando, setConfirmando] = useState(false)
+const CONCLUIDAS = new Set([
+  'CC101','CC102','CC103','CC104',
+  'CC201','CC202','CC203','CC204',
+  'CC301','CC302','CC303','CC304',
+  'CC401','CC402','CC403','CC404','CC405',
+])
 
-  const matriculadas = [...new Set(gradeAtual.map((a) => a.disciplina))]
+const DIA_MAP: Record<string, number> = { Seg:1, Ter:2, Qua:3, Qui:4, Sex:5 }
+
+function parseHorario(h: string) {
+  const m = h.match(/^([\w/]+)\s+(\d+)h[–\-](\d+)h/)
+  if (!m) return null
+  return { dias: m[1].split('/').map(d => DIA_MAP[d]).filter(Boolean), inicio: +m[2], fim: +m[3] }
+}
+
+function temConflito(h1: string, h2: string) {
+  const p1 = parseHorario(h1); const p2 = parseHorario(h2)
+  if (!p1 || !p2) return false
+  if (!p1.dias.some(d => p2.dias.includes(d))) return false
+  return p1.inicio < p2.fim && p2.inicio < p1.fim
+}
+
+type Filtro = 'todas' | 'disponiveis' | 'prereq'
+
+const FILTRO_LABEL: Record<Filtro, string> = {
+  todas:      'Todas',
+  disponiveis:'Com vagas',
+  prereq:     'Pré-req. OK',
+}
+
+export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar }: Props) {
+  const [carrinho, setCarrinho]       = useState<string[]>([])
+  const [confirmado, setConfirmado]   = useState(false)
+  const [confirmando, setConfirmando] = useState(false)
+  const [filtro, setFiltro]           = useState<Filtro>('todas')
+  const [busca, setBusca]             = useState('')
+
+  const matriculadas = [...new Set(gradeAtual.map(a => a.disciplina))]
 
   function toggle(codigo: string) {
-    setCarrinho((prev) =>
-      prev.includes(codigo) ? prev.filter((c) => c !== codigo) : [...prev, codigo]
+    setCarrinho(prev =>
+      prev.includes(codigo) ? prev.filter(c => c !== codigo) : [...prev, codigo]
     )
+  }
+
+  function removerDoCarrinho(codigo: string) {
+    setCarrinho(prev => prev.filter(c => c !== codigo))
   }
 
   async function confirmar() {
@@ -29,93 +69,237 @@ export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar
   }
 
   const vagasLivres = (d: DisciplinaDisponivel) => d.vagas - d.vagasOcupadas
+  const prereqOk    = (d: DisciplinaDisponivel) => !d.prereq || CONCLUIDAS.has(d.prereq)
 
-  return (
-    <div className="mt-section">
-      <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
-      <p className="mt-section-sub">Selecione as disciplinas para o próximo semestre. Vagas sujeitas à disponibilidade.</p>
+  const conflitos = useMemo(() => {
+    const pares: string[] = []
+    for (let i = 0; i < carrinho.length; i++) {
+      for (let j = i + 1; j < carrinho.length; j++) {
+        const d1 = disponiveis.find(d => d.codigo === carrinho[i])
+        const d2 = disponiveis.find(d => d.codigo === carrinho[j])
+        if (d1 && d2 && temConflito(d1.horarios, d2.horarios)) {
+          pares.push(`${d1.codigo} ↔ ${d2.codigo}`)
+        }
+      }
+    }
+    return pares
+  }, [carrinho, disponiveis])
 
-      {confirmado ? (
+  const chTotal = carrinho.reduce((sum, cod) => {
+    const d = disponiveis.find(x => x.codigo === cod)
+    return sum + (d?.ch ?? 0)
+  }, 0)
+
+  const disciplinasFiltradas = disponiveis.filter(d => {
+    const matchBusca = !busca || d.nome.toLowerCase().includes(busca.toLowerCase()) || d.codigo.toLowerCase().includes(busca.toLowerCase())
+    if (!matchBusca) return false
+    if (filtro === 'disponiveis') return vagasLivres(d) > 0
+    if (filtro === 'prereq') return prereqOk(d)
+    return true
+  })
+
+  if (confirmado) {
+    const disciplinasConfirmadas = carrinho.map(cod => disponiveis.find(d => d.codigo === cod)).filter(Boolean) as DisciplinaDisponivel[]
+    return (
+      <div className="mt-section">
         <div className="mt-confirm-box">
-          <div className="mt-confirm-icon">✓</div>
+          <div className="mt-confirm-icon"><CheckCircle size={40} /></div>
           <h3>Pré-matrícula enviada!</h3>
-          <p>Disciplinas selecionadas: <strong>{carrinho.join(', ')}</strong></p>
-          <p className="mt-confirm-note">O resultado será divulgado em 25/06/2026.</p>
+          <p>Você selecionou <strong>{carrinho.length} disciplina(s)</strong> — {chTotal}h no total</p>
+          <div className="mt-confirm-lista">
+            {disciplinasConfirmadas.map(d => (
+              <div key={d.codigo} className="mt-confirm-item">
+                <span className="mt-confirm-codigo">{d.codigo}</span>
+                <span>{d.nome}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-confirm-note">
+            <Calendar size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            O resultado será divulgado em 25/06/2026.
+          </p>
           <button className="mt-btn mt-btn-sec" onClick={() => { setConfirmado(false); setCarrinho([]) }}>
             Nova seleção
           </button>
         </div>
-      ) : (
-        <>
-          <div className="mt-mat-info">
-            <span>Matriculado(a) em <strong>{matriculadas.length}</strong> disciplinas no semestre atual</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-section mt-matricula-layout">
+
+      {/* ── Coluna principal: cards ── */}
+      <div className="mt-cards-col">
+        <div className="mt-mat-header">
+          <div>
+            <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
+            <p className="mt-section-sub">
+              Matriculado(a) em <strong>{matriculadas.length}</strong> disciplinas no semestre atual.
+              Selecione as do próximo.
+            </p>
           </div>
 
-          <div className="mt-table-wrap">
-            <table className="mt-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Disciplina</th>
-                  <th>Professor</th>
-                  <th>Horários</th>
-                  <th>C.H.</th>
-                  <th>Vagas</th>
-                  <th>Pré-req.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {disponiveis.map((d) => {
-                  const livres   = vagasLivres(d)
-                  const selected = carrinho.includes(d.codigo)
-                  const semVaga  = livres === 0
-                  return (
-                    <tr key={d.codigo} className={selected ? 'mt-row-selected' : ''}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selected}
-                          disabled={semVaga && !selected}
-                          onChange={() => toggle(d.codigo)}
-                          className="mt-check"
-                        />
-                      </td>
-                      <td>
-                        <div className="mt-disc-name">{d.nome}</div>
-                        <div className="mt-disc-code">{d.codigo}</div>
-                      </td>
-                      <td className="mt-prof">{d.professor}</td>
-                      <td className="mt-horario">{d.horarios}</td>
-                      <td className="mt-ch">{d.ch}h</td>
-                      <td>
-                        <span className={`mt-vagas ${semVaga ? 'mt-vagas-esgotadas' : livres <= 5 ? 'mt-vagas-poucas' : 'mt-vagas-ok'}`}>
-                          {semVaga ? 'Esgotado' : `${livres} / ${d.vagas}`}
+          <div className="mt-filtros">
+            <div className="mt-busca-wrap">
+              <Search size={16} className="mt-busca-icon" />
+              <input
+                className="mt-busca"
+                placeholder="Buscar disciplina..."
+                value={busca}
+                onChange={e => setBusca(e.target.value)}
+              />
+            </div>
+            <div className="mt-filtro-tabs">
+              {(Object.keys(FILTRO_LABEL) as Filtro[]).map(f => (
+                <button
+                  key={f}
+                  className={`mt-filtro-tab ${filtro === f ? 'mt-filtro-tab--active' : ''}`}
+                  onClick={() => setFiltro(f)}
+                >
+                  {FILTRO_LABEL[f]}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {disciplinasFiltradas.length === 0 ? (
+          <div className="mt-empty">
+            <Search size={40} className="mt-empty-icon" />
+            <p>Nenhuma disciplina encontrada</p>
+            <button className="mt-btn mt-btn-sec" onClick={() => { setBusca(''); setFiltro('todas') }}>
+              Limpar filtros
+            </button>
+          </div>
+        ) : (
+          <div className="mt-disc-cards">
+            {disciplinasFiltradas.map(d => {
+              const livres   = vagasLivres(d)
+              const selected = carrinho.includes(d.codigo)
+              const semVaga  = livres === 0
+              const okPrereq = prereqOk(d)
+              const conflito = selected && conflitos.some(c => c.includes(d.codigo))
+
+              return (
+                <div
+                  key={d.codigo}
+                  className={`mt-disc-card ${selected ? 'mt-disc-card--selected' : ''} ${conflito ? 'mt-disc-card--conflito' : ''} ${semVaga && !selected ? 'mt-disc-card--esgotada' : ''}`}
+                >
+                  <div className="mt-disc-card-accent" style={{
+                    background: selected ? '#1B3A6B' : semVaga ? '#E2E8F0' : '#EBF2FF'
+                  }} />
+
+                  <div className="mt-disc-card-body">
+                    <div className="mt-disc-card-top">
+                      <div>
+                        <div className="mt-disc-card-nome">{d.nome}</div>
+                        <div className="mt-disc-card-codigo">{d.codigo} · {d.professor}</div>
+                      </div>
+                      <div className="mt-disc-card-badges">
+                        {conflito && (
+                          <span className="mt-badge mt-badge--error" title="Conflito de horário">
+                            <AlertTriangle size={10} /> Conflito
+                          </span>
+                        )}
+                        <span className={`mt-badge mt-badge--prereq ${okPrereq ? 'mt-badge--ok' : 'mt-badge--fail'}`}>
+                          {okPrereq ? <Check size={10} /> : <X size={10} />} {d.prereq}
                         </span>
-                      </td>
-                      <td className="mt-prereq">{d.prereq}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
 
-          <div className="mt-footer">
-            <span className="mt-footer-info">
-              {carrinho.length === 0
-                ? 'Nenhuma disciplina selecionada'
-                : `${carrinho.length} disciplina(s) no carrinho`}
-            </span>
+                    <div className="mt-disc-card-info">
+                      <span className="mt-disc-info-item"><Clock size={12} /> {d.horarios}</span>
+                      <span className="mt-disc-info-item"><BookOpen size={12} /> {d.ch}h</span>
+                      <span className={`mt-vagas ${semVaga ? 'mt-vagas-esgotadas' : livres <= 5 ? 'mt-vagas-poucas' : 'mt-vagas-ok'}`}>
+                        {semVaga
+                          ? <><XCircle size={12} /> Esgotado</>
+                          : <><CheckCircle size={12} /> {livres}/{d.vagas} vagas</>
+                        }
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    className={`mt-disc-select-btn ${selected ? 'mt-disc-select-btn--selecionada' : ''}`}
+                    disabled={semVaga && !selected}
+                    onClick={() => toggle(d.codigo)}
+                    aria-pressed={selected}
+                  >
+                    {selected ? <><Check size={12} /> Selecionada</> : semVaga ? 'Esgotada' : '+ Selecionar'}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ── Carrinho lateral ── */}
+      <aside className="mt-cart">
+        <div className="mt-cart-header">
+          <span className="mt-cart-title"><ShoppingCart size={16} /> Carrinho</span>
+          <span className="mt-cart-count">{carrinho.length} disciplina(s)</span>
+        </div>
+
+        {carrinho.length === 0 ? (
+          <div className="mt-cart-empty">
+            <span>Nenhuma disciplina selecionada</span>
+            <span className="mt-cart-empty-hint">Clique em "+ Selecionar" nos cards</span>
+          </div>
+        ) : (
+          <div className="mt-cart-items">
+            {carrinho.map(cod => {
+              const d = disponiveis.find(x => x.codigo === cod)
+              if (!d) return null
+              const conflito = conflitos.some(c => c.includes(cod))
+              return (
+                <div key={cod} className={`mt-cart-item ${conflito ? 'mt-cart-item--conflito' : ''}`}>
+                  <div className="mt-cart-item-info">
+                    <div className="mt-cart-item-nome">{d.nome}</div>
+                    <div className="mt-cart-item-meta">{d.horarios} · {d.ch}h</div>
+                    {conflito && (
+                      <div className="mt-cart-item-aviso">
+                        <AlertTriangle size={12} /> Conflito de horário
+                      </div>
+                    )}
+                  </div>
+                  <button className="mt-cart-remove" onClick={() => removerDoCarrinho(cod)} aria-label={`Remover ${d.nome}`}>
+                    <X size={14} />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {carrinho.length > 0 && (
+          <div className="mt-cart-footer">
+            <div className="mt-cart-total">
+              <span>Carga horária total</span>
+              <strong>{chTotal}h</strong>
+            </div>
+
+            {conflitos.length > 0 && (
+              <div className="mt-cart-conflitos-aviso">
+                <AlertTriangle size={14} /> {conflitos.length} conflito(s) de horário detectado(s)
+              </div>
+            )}
+
             <button
-              className="mt-btn mt-btn-primary"
+              className="mt-btn mt-btn-primary mt-btn-full"
               disabled={carrinho.length === 0 || confirmando}
               onClick={confirmar}
             >
-              {confirmando ? 'Enviando...' : 'Confirmar Pré-matrícula'}
+              {confirmando ? 'Enviando…' : 'Confirmar Pré-matrícula'}
             </button>
+
+            {conflitos.length > 0 && (
+              <p className="mt-cart-conflito-hint">Você pode confirmar mesmo com conflitos, mas revise os horários.</p>
+            )}
           </div>
-        </>
-      )}
+        )}
+      </aside>
     </div>
   )
 }
