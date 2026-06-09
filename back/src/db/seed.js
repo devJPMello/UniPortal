@@ -1,5 +1,8 @@
 import 'dotenv/config'
+import bcrypt from 'bcryptjs'
 import pool from './connection.js'
+
+const SENHA_DEMO = 'uniportal'
 
 async function seed() {
   const client = await pool.connect()
@@ -21,10 +24,12 @@ async function seed() {
       RESTART IDENTITY CASCADE
     `)
 
+    const senhaHash = await bcrypt.hash(SENHA_DEMO, 12)
+
     await client.query(`
-      INSERT INTO alunos (ra, nome, curso, semestre, email) VALUES
-        ('2024001', 'João Pedro Mello', 'Ciência da Computação', '4º Semestre', 'joao.mello@uni.edu.br')
-    `)
+      INSERT INTO alunos (ra, nome, curso, semestre, email, senha_hash) VALUES
+        ('2024001', 'João Pedro Mello', 'Ciência da Computação', '4º Semestre', 'joao.mello@uni.edu.br', $1)
+    `, [senhaHash])
 
     await client.query(`
       INSERT INTO disciplinas (codigo, nome, professor, ch, sigla) VALUES
@@ -122,7 +127,7 @@ async function seed() {
     `)
 
     await client.query('COMMIT')
-    console.log('Seed concluído com sucesso.')
+    console.log(`Seed concluído. Credenciais demo -> RA: 2024001 | Senha: ${SENHA_DEMO}`)
   } catch (err) {
     await client.query('ROLLBACK')
     throw err
