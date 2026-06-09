@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import {
-  CheckCircle, Calendar, Search, AlertTriangle, Check, X,
+  CheckCircle, Search, AlertTriangle, Check, X,
   Clock, BookOpen, XCircle, ShoppingCart,
 } from 'lucide-react'
 import { type DisciplinaDisponivel, type Aula } from '../data/mockData'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 interface Props {
   disponiveis: DisciplinaDisponivel[]
@@ -42,13 +43,19 @@ const FILTRO_LABEL: Record<Filtro, string> = {
 }
 
 export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar }: Props) {
-  const [carrinho, setCarrinho]       = useState<string[]>([])
-  const [confirmado, setConfirmado]   = useState(false)
+  const [carrinho,    setCarrinho]    = useLocalStorage<string[]>('mt:carrinho', [])
+  const [confirmadas, setConfirmadas] = useLocalStorage<string[]>('mt:confirmadas', [])
   const [confirmando, setConfirmando] = useState(false)
-  const [filtro, setFiltro]           = useState<Filtro>('todas')
-  const [busca, setBusca]             = useState('')
+  const [toast,       setToast]       = useState<string | null>(null)
+  const [filtro,      setFiltro]      = useState<Filtro>('todas')
+  const [busca,       setBusca]       = useState('')
 
   const matriculadas = [...new Set(gradeAtual.map(a => a.disciplina))]
+
+  function mostrarToast(msg: string) {
+    setToast(msg)
+    setTimeout(() => setToast(null), 3000)
+  }
 
   function toggle(codigo: string) {
     setCarrinho(prev =>
@@ -65,7 +72,12 @@ export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar
     setConfirmando(true)
     const result = await onConfirmar(carrinho)
     setConfirmando(false)
-    if (result.sucesso) setConfirmado(true)
+    if (result.sucesso) {
+      const novas = carrinho.filter(c => !confirmadas.includes(c))
+      setConfirmadas(prev => [...prev, ...novas])
+      setCarrinho([])
+      mostrarToast(`Pré-matrícula confirmada! ${novas.length} disciplina(s) selecionada(s).`)
+    }
   }
 
   const vagasLivres = (d: DisciplinaDisponivel) => d.vagas - d.vagasOcupadas
@@ -91,6 +103,7 @@ export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar
   }, 0)
 
   const disciplinasFiltradas = disponiveis.filter(d => {
+    if (confirmadas.includes(d.codigo)) return false
     const matchBusca = !busca || d.nome.toLowerCase().includes(busca.toLowerCase()) || d.codigo.toLowerCase().includes(busca.toLowerCase())
     if (!matchBusca) return false
     if (filtro === 'disponiveis') return vagasLivres(d) > 0
@@ -98,208 +111,210 @@ export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar
     return true
   })
 
-  if (confirmado) {
-    const disciplinasConfirmadas = carrinho.map(cod => disponiveis.find(d => d.codigo === cod)).filter(Boolean) as DisciplinaDisponivel[]
-    return (
-      <div className="mt-section">
-        <div className="mt-confirm-box">
-          <div className="mt-confirm-icon"><CheckCircle size={40} /></div>
-          <h3>Pré-matrícula enviada!</h3>
-          <p>Você selecionou <strong>{carrinho.length} disciplina(s)</strong> — {chTotal}h no total</p>
-          <div className="mt-confirm-lista">
-            {disciplinasConfirmadas.map(d => (
-              <div key={d.codigo} className="mt-confirm-item">
-                <span className="mt-confirm-codigo">{d.codigo}</span>
-                <span>{d.nome}</span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-confirm-note">
-            <Calendar size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-            O resultado será divulgado em 25/06/2026.
-          </p>
-          <button className="mt-btn mt-btn-sec" onClick={() => { setConfirmado(false); setCarrinho([]) }}>
-            Nova seleção
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="mt-section mt-matricula-layout">
+    <>
+      <div className="mt-section mt-matricula-layout">
 
-      {/* ── Coluna principal: cards ── */}
-      <div className="mt-cards-col">
-        <div className="mt-mat-header">
-          <div>
-            <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
-            <p className="mt-section-sub">
-              Matriculado(a) em <strong>{matriculadas.length}</strong> disciplinas no semestre atual.
-              Selecione as do próximo.
-            </p>
+        {/* ── Coluna principal: cards ── */}
+        <div className="mt-cards-col">
+          <div className="mt-mat-header">
+            <div>
+              <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
+              <p className="mt-section-sub">
+                Matriculado(a) em <strong>{matriculadas.length}</strong> disciplinas no semestre atual.
+                Selecione as do próximo.
+              </p>
+            </div>
+
+            <div className="mt-filtros">
+              <div className="mt-busca-wrap">
+                <Search size={16} className="mt-busca-icon" />
+                <input
+                  className="mt-busca"
+                  placeholder="Buscar disciplina..."
+                  value={busca}
+                  onChange={e => setBusca(e.target.value)}
+                />
+              </div>
+              <div className="mt-filtro-tabs">
+                {(Object.keys(FILTRO_LABEL) as Filtro[]).map(f => (
+                  <button
+                    key={f}
+                    className={`mt-filtro-tab ${filtro === f ? 'mt-filtro-tab--active' : ''}`}
+                    onClick={() => setFiltro(f)}
+                  >
+                    {FILTRO_LABEL[f]}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-filtros">
-            <div className="mt-busca-wrap">
-              <Search size={16} className="mt-busca-icon" />
-              <input
-                className="mt-busca"
-                placeholder="Buscar disciplina..."
-                value={busca}
-                onChange={e => setBusca(e.target.value)}
-              />
-            </div>
-            <div className="mt-filtro-tabs">
-              {(Object.keys(FILTRO_LABEL) as Filtro[]).map(f => (
-                <button
-                  key={f}
-                  className={`mt-filtro-tab ${filtro === f ? 'mt-filtro-tab--active' : ''}`}
-                  onClick={() => setFiltro(f)}
-                >
-                  {FILTRO_LABEL[f]}
+          {disciplinasFiltradas.length === 0 ? (
+            <div className="mt-empty">
+              <Search size={40} className="mt-empty-icon" />
+              <p>
+                {confirmadas.length > 0 && busca === '' && filtro === 'todas'
+                  ? 'Todas as disciplinas disponíveis já foram confirmadas.'
+                  : 'Nenhuma disciplina encontrada'}
+              </p>
+              {(busca !== '' || filtro !== 'todas') && (
+                <button className="mt-btn mt-btn-sec" onClick={() => { setBusca(''); setFiltro('todas') }}>
+                  Limpar filtros
                 </button>
-              ))}
+              )}
             </div>
-          </div>
-        </div>
+          ) : (
+            <div className="mt-disc-cards">
+              {disciplinasFiltradas.map(d => {
+                const livres   = vagasLivres(d)
+                const selected = carrinho.includes(d.codigo)
+                const semVaga  = livres === 0
+                const okPrereq = prereqOk(d)
+                const conflito = selected && conflitos.some(c => c.includes(d.codigo))
 
-        {disciplinasFiltradas.length === 0 ? (
-          <div className="mt-empty">
-            <Search size={40} className="mt-empty-icon" />
-            <p>Nenhuma disciplina encontrada</p>
-            <button className="mt-btn mt-btn-sec" onClick={() => { setBusca(''); setFiltro('todas') }}>
-              Limpar filtros
-            </button>
-          </div>
-        ) : (
-          <div className="mt-disc-cards">
-            {disciplinasFiltradas.map(d => {
-              const livres   = vagasLivres(d)
-              const selected = carrinho.includes(d.codigo)
-              const semVaga  = livres === 0
-              const okPrereq = prereqOk(d)
-              const conflito = selected && conflitos.some(c => c.includes(d.codigo))
+                return (
+                  <div
+                    key={d.codigo}
+                    className={`mt-disc-card ${selected ? 'mt-disc-card--selected' : ''} ${conflito ? 'mt-disc-card--conflito' : ''} ${semVaga && !selected ? 'mt-disc-card--esgotada' : ''}`}
+                  >
+                    <div className="mt-disc-card-accent" style={{
+                      background: selected ? '#1B3A6B' : semVaga ? '#E2E8F0' : '#EBF2FF'
+                    }} />
 
-              return (
-                <div
-                  key={d.codigo}
-                  className={`mt-disc-card ${selected ? 'mt-disc-card--selected' : ''} ${conflito ? 'mt-disc-card--conflito' : ''} ${semVaga && !selected ? 'mt-disc-card--esgotada' : ''}`}
-                >
-                  <div className="mt-disc-card-accent" style={{
-                    background: selected ? '#1B3A6B' : semVaga ? '#E2E8F0' : '#EBF2FF'
-                  }} />
-
-                  <div className="mt-disc-card-body">
-                    <div className="mt-disc-card-top">
-                      <div>
-                        <div className="mt-disc-card-nome">{d.nome}</div>
-                        <div className="mt-disc-card-codigo">{d.codigo} · {d.professor}</div>
-                      </div>
-                      <div className="mt-disc-card-badges">
-                        {conflito && (
-                          <span className="mt-badge mt-badge--error" title="Conflito de horário">
-                            <AlertTriangle size={10} /> Conflito
+                    <div className="mt-disc-card-body">
+                      <div className="mt-disc-card-top">
+                        <div>
+                          <div className="mt-disc-card-nome">{d.nome}</div>
+                          <div className="mt-disc-card-codigo">{d.codigo} · {d.professor}</div>
+                        </div>
+                        <div className="mt-disc-card-badges">
+                          {conflito && (
+                            <span className="mt-badge mt-badge--error" title="Conflito de horário">
+                              <AlertTriangle size={10} /> Conflito
+                            </span>
+                          )}
+                          <span className={`mt-badge mt-badge--prereq ${okPrereq ? 'mt-badge--ok' : 'mt-badge--fail'}`}>
+                            {okPrereq ? <Check size={10} /> : <X size={10} />} {d.prereq}
                           </span>
-                        )}
-                        <span className={`mt-badge mt-badge--prereq ${okPrereq ? 'mt-badge--ok' : 'mt-badge--fail'}`}>
-                          {okPrereq ? <Check size={10} /> : <X size={10} />} {d.prereq}
+                        </div>
+                      </div>
+
+                      <div className="mt-disc-card-info">
+                        <span className="mt-disc-info-item"><Clock size={12} /> {d.horarios}</span>
+                        <span className="mt-disc-info-item"><BookOpen size={12} /> {d.ch}h</span>
+                        <span className={`mt-vagas ${semVaga ? 'mt-vagas-esgotadas' : livres <= 5 ? 'mt-vagas-poucas' : 'mt-vagas-ok'}`}>
+                          {semVaga
+                            ? <><XCircle size={12} /> Esgotado</>
+                            : <><CheckCircle size={12} /> {livres}/{d.vagas} vagas</>
+                          }
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-disc-card-info">
-                      <span className="mt-disc-info-item"><Clock size={12} /> {d.horarios}</span>
-                      <span className="mt-disc-info-item"><BookOpen size={12} /> {d.ch}h</span>
-                      <span className={`mt-vagas ${semVaga ? 'mt-vagas-esgotadas' : livres <= 5 ? 'mt-vagas-poucas' : 'mt-vagas-ok'}`}>
-                        {semVaga
-                          ? <><XCircle size={12} /> Esgotado</>
-                          : <><CheckCircle size={12} /> {livres}/{d.vagas} vagas</>
-                        }
-                      </span>
-                    </div>
+                    <button
+                      className={`mt-disc-select-btn ${selected ? 'mt-disc-select-btn--selecionada' : ''}`}
+                      disabled={semVaga && !selected}
+                      onClick={() => toggle(d.codigo)}
+                      aria-pressed={selected}
+                    >
+                      {selected ? <><Check size={12} /> Selecionada</> : semVaga ? 'Esgotada' : '+ Selecionar'}
+                    </button>
                   </div>
-
-                  <button
-                    className={`mt-disc-select-btn ${selected ? 'mt-disc-select-btn--selecionada' : ''}`}
-                    disabled={semVaga && !selected}
-                    onClick={() => toggle(d.codigo)}
-                    aria-pressed={selected}
-                  >
-                    {selected ? <><Check size={12} /> Selecionada</> : semVaga ? 'Esgotada' : '+ Selecionar'}
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* ── Carrinho lateral ── */}
-      <aside className="mt-cart">
-        <div className="mt-cart-header">
-          <span className="mt-cart-title"><ShoppingCart size={16} /> Carrinho</span>
-          <span className="mt-cart-count">{carrinho.length} disciplina(s)</span>
+                )
+              })}
+            </div>
+          )}
         </div>
 
-        {carrinho.length === 0 ? (
-          <div className="mt-cart-empty">
-            <span>Nenhuma disciplina selecionada</span>
-            <span className="mt-cart-empty-hint">Clique em "+ Selecionar" nos cards</span>
+        {/* ── Carrinho lateral ── */}
+        <aside className="mt-cart">
+          <div className="mt-cart-header">
+            <span className="mt-cart-title"><ShoppingCart size={16} /> Carrinho</span>
+            <span className="mt-cart-count">{carrinho.length} disciplina(s)</span>
           </div>
-        ) : (
-          <div className="mt-cart-items">
-            {carrinho.map(cod => {
-              const d = disponiveis.find(x => x.codigo === cod)
-              if (!d) return null
-              const conflito = conflitos.some(c => c.includes(cod))
-              return (
-                <div key={cod} className={`mt-cart-item ${conflito ? 'mt-cart-item--conflito' : ''}`}>
-                  <div className="mt-cart-item-info">
-                    <div className="mt-cart-item-nome">{d.nome}</div>
-                    <div className="mt-cart-item-meta">{d.horarios} · {d.ch}h</div>
-                    {conflito && (
-                      <div className="mt-cart-item-aviso">
-                        <AlertTriangle size={12} /> Conflito de horário
-                      </div>
-                    )}
-                  </div>
-                  <button className="mt-cart-remove" onClick={() => removerDoCarrinho(cod)} aria-label={`Remover ${d.nome}`}>
-                    <X size={14} />
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        )}
 
-        {carrinho.length > 0 && (
-          <div className="mt-cart-footer">
-            <div className="mt-cart-total">
-              <span>Carga horária total</span>
-              <strong>{chTotal}h</strong>
+          {carrinho.length === 0 ? (
+            <div className="mt-cart-empty">
+              <span>Nenhuma disciplina selecionada</span>
+              <span className="mt-cart-empty-hint">Clique em "+ Selecionar" nos cards</span>
             </div>
+          ) : (
+            <div className="mt-cart-items">
+              {carrinho.map(cod => {
+                const d = disponiveis.find(x => x.codigo === cod)
+                if (!d) return null
+                const conflito = conflitos.some(c => c.includes(cod))
+                return (
+                  <div key={cod} className={`mt-cart-item ${conflito ? 'mt-cart-item--conflito' : ''}`}>
+                    <div className="mt-cart-item-info">
+                      <div className="mt-cart-item-nome">{d.nome}</div>
+                      <div className="mt-cart-item-meta">{d.horarios} · {d.ch}h</div>
+                      {conflito && (
+                        <div className="mt-cart-item-aviso">
+                          <AlertTriangle size={12} /> Conflito de horário
+                        </div>
+                      )}
+                    </div>
+                    <button className="mt-cart-remove" onClick={() => removerDoCarrinho(cod)} aria-label={`Remover ${d.nome}`}>
+                      <X size={14} />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
-            {conflitos.length > 0 && (
-              <div className="mt-cart-conflitos-aviso">
-                <AlertTriangle size={14} /> {conflitos.length} conflito(s) de horário detectado(s)
+          {carrinho.length > 0 && (
+            <div className="mt-cart-footer">
+              <div className="mt-cart-total">
+                <span>Carga horária total</span>
+                <strong>{chTotal}h</strong>
               </div>
-            )}
 
-            <button
-              className="mt-btn mt-btn-primary mt-btn-full"
-              disabled={carrinho.length === 0 || confirmando}
-              onClick={confirmar}
-            >
-              {confirmando ? 'Enviando…' : 'Confirmar Pré-matrícula'}
-            </button>
+              {conflitos.length > 0 && (
+                <div className="mt-cart-conflitos-aviso">
+                  <AlertTriangle size={14} /> {conflitos.length} conflito(s) de horário detectado(s)
+                </div>
+              )}
 
-            {conflitos.length > 0 && (
-              <p className="mt-cart-conflito-hint">Você pode confirmar mesmo com conflitos, mas revise os horários.</p>
-            )}
-          </div>
-        )}
-      </aside>
-    </div>
+              <button
+                className="mt-btn mt-btn-primary mt-btn-full"
+                disabled={carrinho.length === 0 || confirmando}
+                onClick={confirmar}
+              >
+                {confirmando ? 'Enviando…' : 'Confirmar Pré-matrícula'}
+              </button>
+
+              {conflitos.length > 0 && (
+                <p className="mt-cart-conflito-hint">Você pode confirmar mesmo com conflitos, mas revise os horários.</p>
+              )}
+            </div>
+          )}
+
+          {/* ── Disciplinas já confirmadas ── */}
+          {confirmadas.length > 0 && (
+            <div className="mt-cart-confirmadas">
+              <div className="mt-confirmadas-header">
+                <span><CheckCircle size={13} /> {confirmadas.length} confirmada(s)</span>
+                <button className="mt-confirmadas-limpar" onClick={() => setConfirmadas([])}>Limpar</button>
+              </div>
+              {confirmadas.map(cod => {
+                const d = disponiveis.find(x => x.codigo === cod)
+                if (!d) return null
+                return (
+                  <div key={cod} className="mt-confirmada-item">
+                    <span className="mt-confirm-codigo">{d.codigo}</span>
+                    <span className="mt-confirmada-nome">{d.nome}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </aside>
+      </div>
+
+      {toast && <div className="mt-toast">{toast}</div>}
+    </>
   )
 }

@@ -289,3 +289,43 @@
 }
 .mt-confirm-codigo { font-family: monospace; font-size: 11px; color: var(--color-primary, #1B3A6B); font-weight: 700; flex-shrink: 0; }
 .mt-confirm-note { font-size: 12px; color: var(--color-text-muted, #A0AEC0); }
+
+/* ── Confirmadas no carrinho ── */
+.mt-cart-confirmadas {
+  border-top: 1px solid var(--color-border, #E2E8F0);
+  padding: 10px 0 4px;
+}
+.mt-confirmadas-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px 8px;
+  font-size: 11px; font-weight: 700; color: #38A169;
+}
+.mt-confirmadas-limpar {
+  background: none; border: none; font-size: 11px; color: #A0AEC0;
+  cursor: pointer; font-family: inherit; padding: 0;
+  transition: color .15s;
+}
+.mt-confirmadas-limpar:hover { color: #E53E3E; }
+.mt-confirmada-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 16px; font-size: 12px;
+  border-bottom: 1px solid var(--color-border, #E2E8F0);
+}
+.mt-confirmada-item:last-child { border-bottom: none; }
+.mt-confirmada-nome {
+  color: var(--color-text-secondary, #718096); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Toast ── */
+@keyframes mtToastIn { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+.mt-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1B3A6B; color: #fff;
+  padding: 12px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  pointer-events: none; z-index: 9999;
+  animation: mtToastIn .25s ease;
+  white-space: nowrap;
+}
