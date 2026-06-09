@@ -6,7 +6,5 @@ const params = new URLSearchParams(location.search)
 const token  = params.get('token') ?? undefined
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <FinanceiroApp token={token} />
-  </React.StrictMode>
+  <FinanceiroApp token={token} />
 )
