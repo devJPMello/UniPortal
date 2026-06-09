@@ -23,7 +23,7 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN ?? 'http://localhost:3000'
 const origins = CORS_ORIGIN.split(',').map((s) => s.trim())
 app.use(cors({ origin: origins.length === 1 ? origins[0] : origins }))
 app.use(express.json())
-app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/health' } }))
+app.use(pinoHttp({ logger, autoLogging: false }))
 
 app.get('/health', (_req, res) =>
   res.json({ status: 'ok', service: 'uniportal-api', timestamp: new Date() }),
