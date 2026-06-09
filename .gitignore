@@ -56,3 +56,5 @@ coverage/
 .parcel-cache/
 .eslintcache
 .stylelintcache
+.claude
+.github
