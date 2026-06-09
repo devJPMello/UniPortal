@@ -1,8 +1,10 @@
 // Orquestra build e start de todos os módulos (front + back)
-const { execSync, spawn } = require('child_process')
-const path = require('path')
-const fs = require('fs')
+import { execSync, spawn } from 'child_process'
+import path from 'path'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const cyan   = (s) => `\x1b[36m${s}\x1b[0m`
 const green  = (s) => `\x1b[32m${s}\x1b[0m`
@@ -24,7 +26,7 @@ console.log(yellow('📦 Compilando MFEs remotos (Module Federation)...'))
 execSync('npm run build --workspace=mfe-academico',  { stdio: 'inherit', cwd: root })
 execSync('npm run build --workspace=mfe-matricula',  { stdio: 'inherit', cwd: root })
 execSync('npm run build --workspace=mfe-biblioteca', { stdio: 'inherit', cwd: root })
-execSync('npm run build --workspace=mfe-financeiro',{ stdio: 'inherit', cwd: root })
+execSync('npm run build --workspace=mfe-financeiro',  { stdio: 'inherit', cwd: root })
 
 console.log(green('\n🚀 Iniciando todos os serviços:\n'))
 console.log('  Shell        →  http://localhost:3000')
@@ -33,7 +35,7 @@ console.log('  Acadêmico    →  http://localhost:3001  (Module Federation remo
 console.log('  Matrícula    →  http://localhost:3002  (Module Federation remote)')
 console.log('  Biblioteca   →  http://localhost:3003  (iframe target)')
 console.log('  Financeiro   →  http://localhost:3004  (iframe target)')
-console.log(cyan('\n🔑 Credenciais de demo: RA: 2024001 | Senha: qualquer\n'))
+console.log(cyan('\n🔑 Credenciais de demo: RA: 2024001 | Senha: uniportal\n'))
 
 const services = [
   { label: 'back',           args: ['run', 'dev', '--workspace=@uniportal/back'] },

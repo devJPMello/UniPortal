@@ -2,7 +2,12 @@
   "name": "@uniportal/design-system",
   "version": "1.0.0",
   "exports": {
-    "./tokens.css": "./src/tokens.css"
+    "./tokens.css": "./src/tokens.css",
+    "./components": "./src/components/index.ts"
   },
-  "files": ["src"]
+  "files": ["src"],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
 }
