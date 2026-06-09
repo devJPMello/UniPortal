@@ -72,7 +72,7 @@ export default function Dashboard() {
       <div className="db-banner">
         <div className="db-banner-body">
           <div className="db-banner-left">
-            <p className="db-banner-greeting">Bem-vindo(a) de volta 👋</p>
+            <p className="db-banner-greeting">Bem-vindo(a) de volta</p>
             <h1 className="db-banner-name">{user?.nome}</h1>
             <p className="db-banner-sub">{user?.curso} · RA {user?.ra}</p>
 

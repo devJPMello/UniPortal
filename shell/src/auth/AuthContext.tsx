@@ -11,44 +11,59 @@ export interface User {
 interface AuthContextValue {
   user: User | null
   token: string | null
-  login: (ra: string, senha: string) => boolean
+  login: (ra: string, senha: string) => Promise<boolean>
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 const STORAGE_KEY = 'uniportal_token'
+const API_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:4000'
 
-const MOCK_USER: User = {
-  ra: '2024001',
-  nome: 'João Pedro Mello',
-  curso: 'Ciência da Computação',
-  semestre: '4º Semestre',
-  email: 'joao.mello@uni.edu.br',
-}
-
-function encodeToken(user: User): string {
-  return btoa(JSON.stringify(user))
+function decodeJwtPayload(token: string): User | null {
+  try {
+    const base64Url = token.split('.')[1]
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+    const payload = JSON.parse(new TextDecoder().decode(bytes))
+    if (!payload.ra || !payload.nome) return null
+    return {
+      ra: payload.ra,
+      nome: payload.nome,
+      curso: payload.curso ?? '',
+      semestre: payload.semestre ?? '',
+      email: payload.email ?? '',
+    }
+  } catch {
+    return null
+  }
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem(STORAGE_KEY))
   const [user, setUser] = useState<User | null>(() => {
     const t = localStorage.getItem(STORAGE_KEY)
-    if (!t) return null
-    try { return JSON.parse(atob(t)) as User } catch { return null }
+    return t ? decodeJwtPayload(t) : null
   })
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem(STORAGE_KEY)
-  )
 
-  const login = useCallback((ra: string, _senha: string): boolean => {
-    if (!ra.trim()) return false
-    const u = { ...MOCK_USER, ra }
-    const t = encodeToken(u)
-    localStorage.setItem(STORAGE_KEY, t)
-    setUser(u)
-    setToken(t)
-    return true
+  const login = useCallback(async (ra: string, senha: string): Promise<boolean> => {
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ra: ra.trim(), senha }),
+      })
+      if (!res.ok) return false
+      const { token: t } = (await res.json()) as { token: string }
+      const u = decodeJwtPayload(t)
+      if (!u) return false
+      localStorage.setItem(STORAGE_KEY, t)
+      setToken(t)
+      setUser(u)
+      return true
+    } catch {
+      return false
+    }
   }, [])
 
   const logout = useCallback(() => {

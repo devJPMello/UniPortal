@@ -8,7 +8,7 @@ export default function Layout() {
       <Header />
       <div className="layout-body">
         <Sidebar />
-        <main className="layout-main">
+        <main className="layout-main" id="main-content" role="main" aria-label="Conteúdo principal">
           <Outlet />
         </main>
       </div>

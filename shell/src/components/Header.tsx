@@ -11,23 +11,34 @@ export default function Header() {
     .join('') ?? 'U'
 
   return (
-    <header className="header">
-      <div className="header-brand">
-        <GraduationCap size={28} color="var(--color-secondary)" />
+    <header className="header" role="banner">
+      <div className="header-brand" aria-label="UniPortal">
+        <GraduationCap size={28} color="var(--color-secondary)" aria-hidden="true" />
         <div className="header-brand-text">
           <span className="header-brand-name">UniPortal</span>
           <span className="header-brand-subtitle">Sistema Acadêmico Integrado</span>
         </div>
       </div>
 
-      <div className="header-user">
+      <div className="header-user" aria-label="Informações do usuário">
         <div className="header-user-info">
           <span className="header-user-name">{user?.nome}</span>
           <span className="header-user-detail">RA: {user?.ra} · {user?.semestre}</span>
         </div>
-        <div className="header-avatar">{initials}</div>
-        <button className="header-logout" onClick={logout} title="Sair">
-          <LogOut size={18} />
+        <div
+          className="header-avatar"
+          role="img"
+          aria-label={`Avatar de ${user?.nome}`}
+        >
+          {initials}
+        </div>
+        <button
+          className="header-logout"
+          onClick={logout}
+          aria-label="Sair do sistema"
+          title="Sair"
+        >
+          <LogOut size={18} aria-hidden="true" />
         </button>
       </div>
     </header>

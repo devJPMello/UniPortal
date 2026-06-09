@@ -7,8 +7,8 @@ export default defineConfig(({ mode }) => {
 
   const MFE_ACADEMICO_URL  = env.VITE_MFE_ACADEMICO_URL  || 'http://localhost:3001'
   const MFE_MATRICULA_URL  = env.VITE_MFE_MATRICULA_URL  || 'http://localhost:3002'
-  const MFE_BIBLIOTECA_URL = env.VITE_MFE_BIBLIOTECA_URL || 'http://localhost:3003'
-  const MFE_FINANCEIRO_URL = env.VITE_MFE_FINANCEIRO_URL || 'http://localhost:3004'
+  const MFE_BIBLIOTECA_URL = env.VITE_BIBLIOTECA_URL     || 'http://localhost:3003'
+  const MFE_FINANCEIRO_URL = env.VITE_FINANCEIRO_URL     || 'http://localhost:3004'
 
   return {
     plugins: [
@@ -26,8 +26,16 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       target: 'esnext',
-      minify: false,
     },
     server: { port: 3000 },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./src/test-setup.ts'],
+      exclude: ['node_modules', 'dist'],
+      env: {
+        VITE_API_URL: 'http://localhost:4000',
+      },
+    },
   }
 })

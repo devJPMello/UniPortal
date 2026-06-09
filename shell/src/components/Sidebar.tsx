@@ -24,8 +24,8 @@ const badgeBg: Record<string, string> = {
 
 export default function Sidebar() {
   return (
-    <aside className="sidebar">
-      <nav className="sidebar-nav">
+    <aside className="sidebar" aria-label="Navegação principal">
+      <nav className="sidebar-nav" role="navigation" aria-label="Menu do portal">
         {navItems.map(({ to, icon: Icon, label, badge }) => (
           <NavLink
             key={to}
@@ -33,11 +33,16 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `sidebar-item${isActive ? ' sidebar-item--active' : ''}`
             }
+            aria-label={badge ? `${label} (integração ${badge})` : label}
           >
-            <Icon size={20} />
+            <Icon size={20} aria-hidden="true" />
             <span className="sidebar-item-label">{label}</span>
             {badge && (
-              <span className="sidebar-badge" style={{ background: badgeBg[badge] }}>
+              <span
+                className="sidebar-badge"
+                style={{ background: badgeBg[badge] }}
+                aria-label={`Tipo: ${badge}`}
+              >
                 {badge}
               </span>
             )}
@@ -45,12 +50,12 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-footer" aria-label="Legenda de integrações">
         <p className="sidebar-arch-note">
-          <span className="arch-dot arch-dot--blue" /> Module Federation
+          <span className="arch-dot arch-dot--blue" aria-hidden="true" /> Module Federation
         </p>
         <p className="sidebar-arch-note">
-          <span className="arch-dot arch-dot--yellow" /> iframe Integration
+          <span className="arch-dot arch-dot--yellow" aria-hidden="true" /> iframe Integration
         </p>
       </div>
     </aside>
