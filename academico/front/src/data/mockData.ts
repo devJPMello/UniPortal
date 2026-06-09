@@ -6,6 +6,8 @@ export interface Disciplina {
   av2: number | null
   ch: number
   situacao: 'Em Curso' | 'Aprovado' | 'Reprovado'
+  faltas?: number
+  totalAulas?: number
 }
 
 export interface SemestreHistorico {
@@ -14,11 +16,11 @@ export interface SemestreHistorico {
 }
 
 export const semAtual: Disciplina[] = [
-  { codigo: 'CC401', nome: 'Estruturas de Dados Avançadas',  professor: 'Prof. Dr. Ricardo Santos',  av1: 8.5, av2: null, ch: 80, situacao: 'Em Curso'  },
-  { codigo: 'CC402', nome: 'Banco de Dados II',              professor: 'Prof. Dra. Ana Oliveira',   av1: 7.0, av2: 7.5,  ch: 60, situacao: 'Em Curso'  },
-  { codigo: 'CC403', nome: 'Engenharia de Software',         professor: 'Prof. Dr. Carlos Lima',    av1: 9.0, av2: null, ch: 80, situacao: 'Em Curso'  },
-  { codigo: 'CC404', nome: 'Redes de Computadores',          professor: 'Prof. Dr. Paulo Costa',    av1: 6.5, av2: 7.0,  ch: 60, situacao: 'Em Curso'  },
-  { codigo: 'CC405', nome: 'Computação em Nuvem',            professor: 'Prof. Dra. Maria Silva',   av1: 8.0, av2: null, ch: 60, situacao: 'Em Curso'  },
+  { codigo: 'CC401', nome: 'Estruturas de Dados Avançadas',  professor: 'Prof. Dr. Ricardo Santos',  av1: 8.5, av2: null, ch: 80, situacao: 'Em Curso', faltas: 4,  totalAulas: 80 },
+  { codigo: 'CC402', nome: 'Banco de Dados II',              professor: 'Prof. Dra. Ana Oliveira',   av1: 7.0, av2: 7.5,  ch: 60, situacao: 'Em Curso', faltas: 8,  totalAulas: 60 },
+  { codigo: 'CC403', nome: 'Engenharia de Software',         professor: 'Prof. Dr. Carlos Lima',    av1: 9.0, av2: null, ch: 80, situacao: 'Em Curso', faltas: 2,  totalAulas: 80 },
+  { codigo: 'CC404', nome: 'Redes de Computadores',          professor: 'Prof. Dr. Paulo Costa',    av1: 6.5, av2: 7.0,  ch: 60, situacao: 'Em Curso', faltas: 14, totalAulas: 60 },
+  { codigo: 'CC405', nome: 'Computação em Nuvem',            professor: 'Prof. Dra. Maria Silva',   av1: 8.0, av2: null, ch: 60, situacao: 'Em Curso', faltas: 6,  totalAulas: 60 },
 ]
 
 export const historico: SemestreHistorico[] = [

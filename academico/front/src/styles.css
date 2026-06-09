@@ -1,5 +1,7 @@
 /* Prefixo .ac- isola estilos do MFE Acadêmico */
 
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
+
 .ac-root {
   font-family: var(--font-sans, 'Inter', sans-serif);
   color: var(--color-text, #1A202C);
@@ -40,9 +42,7 @@
 }
 
 /* ── Content ── */
-.ac-content {
-  flex: 1; overflow-y: auto; padding: 24px;
-}
+.ac-content { flex: 1; overflow-y: auto; padding: 24px; }
 
 /* ── Section ── */
 .ac-section { }
@@ -54,6 +54,32 @@
   background: var(--color-info-bg, #EBF8FF);
   color: var(--color-info, #3182CE);
   text-transform: uppercase; letter-spacing: 0.4px;
+}
+
+/* ── IRA Card ── */
+.ac-ira-card {
+  display: flex; align-items: center; gap: 24px;
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+  padding: 18px 24px; margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  animation: fadeIn .3s ease;
+}
+.ac-ira-left { flex-shrink: 0; }
+.ac-ira-label { font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+.ac-ira-valor { font-size: 32px; font-weight: 800; line-height: 1.1; margin: 2px 0; }
+.ac-ira-valor.ac-ira--high { color: #38A169; }
+.ac-ira-valor.ac-ira--mid  { color: #D69E2E; }
+.ac-ira-valor.ac-ira--low  { color: #E53E3E; }
+.ac-ira-hint { font-size: 11px; color: #A0AEC0; }
+.ac-ira-bar-wrap { flex: 1; }
+.ac-ira-track {
+  height: 10px; background: #EDF2F7; border-radius: 999px; overflow: hidden;
+  margin-bottom: 6px;
+}
+.ac-ira-fill { height: 100%; border-radius: 999px; transition: width .8s ease; }
+.ac-ira-scale {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: #A0AEC0;
 }
 
 /* ── Table ── */
@@ -93,13 +119,23 @@
 
 .ac-nota  { text-align: center; font-weight: 600; font-size: 14px; }
 .ac-nota-media { color: var(--color-primary, #1B3A6B); }
-.ac-nota-low  { color: var(--color-error, #E53E3E) !important; }
-.ac-nota-high { color: var(--color-success, #38A169) !important; }
+.ac-nota-low  { color: #E53E3E !important; }
+.ac-nota-high { color: #38A169 !important; }
+.ac-nota-warn { color: #D69E2E !important; }
 .ac-ch { text-align: center; color: var(--color-text-secondary, #718096); }
 .ac-badge {
   display: inline-block; font-size: 11px; font-weight: 600;
   padding: 3px 10px; border-radius: var(--radius-full, 9999px);
 }
+
+/* ── Frequência ── */
+.ac-freq-cell { min-width: 110px; }
+.ac-freq-wrap { display: flex; flex-direction: column; gap: 4px; }
+.ac-freq-track {
+  height: 5px; background: #EDF2F7; border-radius: 999px; overflow: hidden;
+}
+.ac-freq-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
+.ac-freq-txt { font-size: 11px; color: #718096; font-weight: 600; }
 
 /* ── Legenda ── */
 .ac-legenda {
@@ -112,20 +148,55 @@
 .ac-leg-sep { flex: 1; }
 .ac-leg-text { font-weight: 600; }
 
-/* ── Histórico ── */
+/* ── Histórico Summary ── */
 .ac-hist-summary {
-  display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+  display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
 }
 .ac-hist-stat {
   background: var(--color-surface, #fff); border: 1px solid var(--color-border, #E2E8F0);
-  border-radius: var(--radius-lg, 12px); padding: 16px 20px; text-align: center;
-  box-shadow: var(--shadow-sm);
+  border-top: 3px solid #E2E8F0;
+  border-radius: var(--radius-lg, 12px); padding: 14px 18px; text-align: center;
+  box-shadow: var(--shadow-sm); flex: 1; min-width: 110px;
+  animation: fadeIn .3s ease;
 }
-.ac-hist-stat-val { display: block; font-size: 24px; font-weight: 700; color: var(--color-primary, #1B3A6B); }
+.ac-hist-stat--primary { border-top-color: #1B3A6B; }
+.ac-hist-stat--success  { border-top-color: #38A169; }
+.ac-hist-stat--error    { border-top-color: #E53E3E; }
+.ac-hist-stat--info     { border-top-color: #3182CE; }
+.ac-hist-stat--ira      { border-top-color: #9F7AEA; }
+.ac-hist-stat-icon { display: block; font-size: 18px; margin-bottom: 4px; }
+.ac-hist-stat-val { display: block; font-size: 22px; font-weight: 700; color: var(--color-primary, #1B3A6B); line-height: 1.1; }
 .ac-hist-stat-lbl { display: block; font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; }
+
+/* ── Histórico Semestre ── */
 .ac-hist-sem { margin-bottom: 28px; }
+.ac-hist-sem-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; margin-bottom: 10px;
+}
 .ac-hist-periodo {
   font-size: 13px; font-weight: 700; color: var(--color-text-secondary);
   text-transform: uppercase; letter-spacing: 0.6px;
-  margin-bottom: 10px; padding-left: 2px;
 }
+.ac-hist-sem-stats {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px;
+}
+.ac-hist-sem-stat {
+  font-size: 12px; color: #718096;
+}
+.ac-hist-sem-stat strong { font-weight: 700; }
+
+/* ── Grade Bars (mini chart) ── */
+.ac-grade-bars {
+  display: flex; gap: 6px; align-items: flex-end; flex-shrink: 0;
+}
+.ac-grade-bar-col {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: default;
+}
+.ac-grade-bar-track {
+  width: 18px; height: 48px; background: #EDF2F7; border-radius: 4px;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.ac-grade-bar-fill { width: 100%; border-radius: 4px; transition: height .5s ease; }
+.ac-grade-bar-lbl { font-size: 9px; color: #A0AEC0; font-weight: 600; }
