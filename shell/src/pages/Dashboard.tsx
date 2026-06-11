@@ -34,13 +34,13 @@ const modules = [
   },
   {
     icon: BookOpen, color: '#38A169', bg: '#F0FFF4',
-    tag: 'iframe', tipo: 'iframe',
+    tag: 'Module Federation', tipo: 'mfe',
     title: 'Biblioteca', desc: 'Empréstimos, reservas e acervo digital',
     to: '/biblioteca',
   },
   {
     icon: Landmark, color: '#D69E2E', bg: '#FFFFF0',
-    tag: 'iframe', tipo: 'iframe',
+    tag: 'Module Federation', tipo: 'mfe',
     title: 'Financeiro', desc: 'Boletos, mensalidades e extrato',
     to: '/financeiro',
   },

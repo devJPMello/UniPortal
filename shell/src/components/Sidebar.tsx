@@ -13,13 +13,12 @@ const navItems: NavItem[] = [
   { to: '/dashboard',  icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/academico',  icon: GraduationCap,   label: 'Acadêmico',  badge: 'MFE'    },
   { to: '/matricula',  icon: Calendar,        label: 'Matrícula',  badge: 'MFE'    },
-  { to: '/biblioteca', icon: BookOpen,        label: 'Biblioteca', badge: 'iframe' },
-  { to: '/financeiro', icon: CreditCard,      label: 'Financeiro', badge: 'iframe' },
+  { to: '/biblioteca', icon: BookOpen,        label: 'Biblioteca', badge: 'MFE'    },
+  { to: '/financeiro', icon: CreditCard,      label: 'Financeiro', badge: 'MFE'    },
 ]
 
 const badgeBg: Record<string, string> = {
-  MFE:    '#2E5DA8',
-  iframe: '#D69E2E',
+  MFE: '#2E5DA8',
 }
 
 export default function Sidebar() {
@@ -53,9 +52,6 @@ export default function Sidebar() {
       <div className="sidebar-footer" aria-label="Legenda de integrações">
         <p className="sidebar-arch-note">
           <span className="arch-dot arch-dot--blue" aria-hidden="true" /> Module Federation
-        </p>
-        <p className="sidebar-arch-note">
-          <span className="arch-dot arch-dot--yellow" aria-hidden="true" /> iframe Integration
         </p>
       </div>
     </aside>

@@ -89,7 +89,6 @@ body {
 .sidebar-arch-note { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 2; display: flex; align-items: center; gap: 6px; }
 .arch-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .arch-dot--blue   { background: #63B3ED; }
-.arch-dot--yellow { background: var(--color-secondary); }
 
 /* ── Login ───────────────────────────────────────── */
 .login-bg {
@@ -180,7 +179,6 @@ body {
   border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.5px;
 }
 .module-card--mfe .module-tag   { background: var(--color-primary-light); color: var(--color-primary); }
-.module-card--iframe .module-tag { background: var(--color-warning-bg); color: var(--color-warning); }
 .module-link { font-size: 13px; font-weight: 600; color: var(--color-primary); text-decoration: none; }
 .module-link:hover { text-decoration: underline; }
 
@@ -195,11 +193,8 @@ body {
   border: 1px solid #BFD5F7; padding: 8px 14px; border-radius: var(--radius-md);
   flex-shrink: 0;
 }
-.mfe-badge--iframe { background: var(--color-warning-bg); border-color: #F6D860; }
 .mfe-badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .mfe-badge-dot--blue   { background: var(--color-primary); }
-.mfe-badge-dot--yellow { background: var(--color-warning); }
-.mfe-iframe { flex: 1; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
 .mfe-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 16px; color: var(--color-text-secondary); }
 .mfe-error {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -221,7 +216,7 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ════════════════════════════════════════════════════
-   Dashboard — componentes específicos (.db-)
+   Dashboard: componentes específicos (.db-)
 ════════════════════════════════════════════════════ */
 
 /* ── Banner ───────────────────────────────────────── */
@@ -490,7 +485,6 @@ body {
 }
 
 .db-module-tag--mfe   { background: var(--color-primary-light); color: var(--color-primary); }
-.db-module-tag--iframe { background: var(--color-warning-bg);   color: var(--color-warning);  }
 
 .db-module-desc {
   font-size: 12px;
@@ -517,7 +511,7 @@ body {
 .anim-fade-in    { animation: fadeIn .25s ease both; }
 .anim-scale-in   { animation: scaleIn .25s ease both; }
 
-/* Staggered children — add delay via CSS var or nth-child */
+/* Staggered children: add delay via CSS var or nth-child */
 .anim-stagger > *:nth-child(1) { animation-delay: .05s; }
 .anim-stagger > *:nth-child(2) { animation-delay: .10s; }
 .anim-stagger > *:nth-child(3) { animation-delay: .15s; }

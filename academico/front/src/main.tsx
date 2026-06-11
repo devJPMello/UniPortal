@@ -1,4 +1,4 @@
-// Entrada standalone — usada só para npm run dev:standalone
+// Entrada standalone usada só para npm run dev:standalone
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import AcademicoApp from './AcademicoApp'

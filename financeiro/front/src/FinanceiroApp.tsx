@@ -11,7 +11,8 @@ interface Props {
 function decodeJwt(token: string) {
   try {
     const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
-    return JSON.parse(atob(b64)) as { ra: string; nome: string }
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+    return JSON.parse(new TextDecoder().decode(bytes)) as { ra: string; nome: string }
   } catch { return null }
 }
 
@@ -20,7 +21,7 @@ export default function FinanceiroApp({ token }: Props) {
 
   const decoded = token ? decodeJwt(token) : null
   const nome = decoded?.nome ?? 'Visitante'
-  const ra   = decoded?.ra   ?? '—'
+  const ra   = decoded?.ra   ?? 'N/A'
 
   const totalMensalidades = boletos.length
   const pagas = boletos.filter(b => b.status === 'pago').length
@@ -33,7 +34,7 @@ export default function FinanceiroApp({ token }: Props) {
             <CreditCard size={20} className="fn-title-icon" />
             Portal Financeiro
           </div>
-          <div className="fn-subtitle">Sistema da Mantenedora — integrado via iframe</div>
+          <div className="fn-subtitle">Micro-frontend Financeiro integrado via Module Federation</div>
           <div className="fn-user">
             <span className="fn-user-name">{nome}</span>
             <span className="fn-user-sep">·</span>

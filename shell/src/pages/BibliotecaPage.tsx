@@ -28,7 +28,7 @@ export default function BibliotecaPage() {
     <div className="mfe-container">
       <div className="mfe-badge">
         <span className="mfe-badge-dot mfe-badge-dot--blue" />
-        Módulo Biblioteca — carregado via <strong>Module Federation</strong>
+        Módulo Biblioteca carregado via <strong>Module Federation</strong>
         &nbsp;·&nbsp; deploy independente, equipe própria
       </div>
       <MfeErrorBoundary name="Biblioteca">

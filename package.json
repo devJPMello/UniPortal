@@ -17,13 +17,13 @@
     "setup:db": "npm run setup --workspace=@uniportal/back",
     "start": "node infra/start.js",
     "install:all": "npm install",
-    "lint": "eslint shell/src academico/front/src matricula/front/src design-system/src",
+    "lint": "eslint shell/src academico/front/src matricula/front/src biblioteca/front/src financeiro/front/src design-system/src",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,css}\" --ignore-path .gitignore",
     "test": "npm run test --workspace=shell"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.4.1",
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",

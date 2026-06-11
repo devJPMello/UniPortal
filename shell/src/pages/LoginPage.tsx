@@ -105,7 +105,7 @@ export default function LoginPage() {
         <div className="login-sso-note" aria-label="Status do SSO">
           <span className="sso-dot" aria-hidden="true" />
           <span>
-            <strong>SSO ativo</strong> — suas credenciais funcionam em todos os módulos do portal
+            <strong>SSO ativo</strong>. Suas credenciais funcionam em todos os módulos do portal
           </span>
         </div>
       </div>

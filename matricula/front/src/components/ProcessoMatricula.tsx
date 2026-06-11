@@ -22,7 +22,7 @@ const CONCLUIDAS = new Set([
 const DIA_MAP: Record<string, number> = { Seg:1, Ter:2, Qua:3, Qui:4, Sex:5 }
 
 function parseHorario(h: string) {
-  const m = h.match(/^([\w/]+)\s+(\d+)h[–\-](\d+)h/)
+  const m = h.match(/^([\w/]+)\s+(\d+)h-(\d+)h/)
   if (!m) return null
   return { dias: m[1].split('/').map(d => DIA_MAP[d]).filter(Boolean), inicio: +m[2], fim: +m[3] }
 }
@@ -119,7 +119,7 @@ export default function ProcessoMatricula({ disponiveis, gradeAtual, onConfirmar
         <div className="mt-cards-col">
           <div className="mt-mat-header">
             <div>
-              <h2 className="mt-section-title">Processo de Matrícula — 2026.2</h2>
+              <h2 className="mt-section-title">Processo de Matrícula: 2026.2</h2>
               <p className="mt-section-sub">
                 Matriculado(a) em <strong>{matriculadas.length}</strong> disciplinas no semestre atual.
                 Selecione as do próximo.

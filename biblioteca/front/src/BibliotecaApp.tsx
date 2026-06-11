@@ -27,7 +27,7 @@ export default function BibliotecaApp({ token }: Props) {
   const { emprestimos, historico, catalogo, loading, erro } = useBiblioteca(token)
 
   let nome = 'Visitante'
-  let ra   = '—'
+  let ra   = 'N/A'
   try {
     if (token) {
       const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
@@ -46,7 +46,7 @@ export default function BibliotecaApp({ token }: Props) {
       <div className="bl-header">
         <div>
           <div className="bl-title"><Library size={20} /> Biblioteca Universitária</div>
-          <div className="bl-subtitle">Sistema de Fornecedor Externo — integrado via iframe</div>
+          <div className="bl-subtitle">Micro-frontend Biblioteca integrado via Module Federation</div>
         </div>
         <div className="bl-user">
           {nome} · RA: {ra}

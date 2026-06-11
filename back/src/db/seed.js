@@ -92,11 +92,11 @@ async function seed() {
 
     await client.query(`
       INSERT INTO disciplinas_disponiveis (codigo, nome, professor, ch, vagas, vagas_ocupadas, horarios, prereq) VALUES
-        ('CC501', 'Inteligência Artificial', 'Prof. Dr. Rafael Moura', 80, 40, 28, 'Seg/Qua 14h–16h', 'CC401'),
-        ('CC502', 'Desenvolvimento Mobile',  'Prof. Dra. Carla Dias',  60, 35, 30, 'Ter/Qui 10h–12h', 'CC301'),
-        ('CC503', 'Segurança da Informação', 'Prof. Dr. Bruno Alves',  60, 40, 15, 'Sex 08h–12h',     'CC404'),
-        ('CC504', 'Arquitetura de Software', 'Prof. Dr. Carlos Lima',  80, 30, 29, 'Seg/Qua 16h–18h', 'CC403'),
-        ('CC505', 'Machine Learning',        'Prof. Dra. Maria Silva', 80, 35, 20, 'Ter/Qui 14h–16h', 'CC401')
+        ('CC501', 'Inteligência Artificial', 'Prof. Dr. Rafael Moura', 80, 40, 28, 'Seg/Qua 14h-16h', 'CC401'),
+        ('CC502', 'Desenvolvimento Mobile',  'Prof. Dra. Carla Dias',  60, 35, 30, 'Ter/Qui 10h-12h', 'CC301'),
+        ('CC503', 'Segurança da Informação', 'Prof. Dr. Bruno Alves',  60, 40, 15, 'Sex 08h-12h',     'CC404'),
+        ('CC504', 'Arquitetura de Software', 'Prof. Dr. Carlos Lima',  80, 30, 29, 'Seg/Qua 16h-18h', 'CC403'),
+        ('CC505', 'Machine Learning',        'Prof. Dra. Maria Silva', 80, 35, 20, 'Ter/Qui 14h-16h', 'CC401')
     `)
 
     await client.query(`

@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL as string | undefined
 export function useAcademico(token?: string) {
   const [boletim,      setBoletim]      = useState<Disciplina[]>(semAtual)
   const [historico,    setHistorico]    = useState<SemestreHistorico[]>(mockHistorico)
-  const [periodoAtual, setPeriodoAtual] = useState<string>('—')
+  const [periodoAtual, setPeriodoAtual] = useState<string>('N/A')
   const [loading,      setLoading]      = useState(false)
   const [erro,         setErro]         = useState<string | null>(null)
 
