@@ -2,9 +2,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { AuthProvider, useAuth } from '../auth/AuthContext'
 
+function toBase64Url(value: object) {
+  const bytes = new TextEncoder().encode(JSON.stringify(value))
+  const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('')
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
 const FAKE_JWT =
   'eyJhbGciOiJIUzI1NiJ9.' +
-  btoa(JSON.stringify({ ra: '2024001', nome: 'João Mello', curso: 'CC', semestre: '4º', email: 'j@uni.edu' })) +
+  toBase64Url({ ra: '2024001', nome: 'João Mello', curso: 'CC', semestre: '4º', email: 'j@uni.edu' }) +
   '.signature'
 
 function wrapper({ children }: { children: React.ReactNode }) {
@@ -86,7 +92,7 @@ describe('useAuth', () => {
     expect(localStorage.getItem('uniportal_token')).toBeNull()
   })
 
-  it('persiste sessão ao recarregar — lê token do localStorage na inicialização', () => {
+  it('persiste sessão ao recarregar e lê token do localStorage na inicialização', () => {
     localStorage.setItem('uniportal_token', FAKE_JWT)
 
     const { result } = renderHook(() => useAuth(), { wrapper })

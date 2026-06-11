@@ -28,7 +28,7 @@ export default function FinanceiroPage() {
     <div className="mfe-container">
       <div className="mfe-badge">
         <span className="mfe-badge-dot mfe-badge-dot--blue" />
-        Módulo Financeiro — carregado via <strong>Module Federation</strong>
+        Módulo Financeiro carregado via <strong>Module Federation</strong>
         &nbsp;·&nbsp; deploy independente, equipe própria
       </div>
       <MfeErrorBoundary name="Financeiro">

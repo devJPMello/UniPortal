@@ -13,7 +13,11 @@ export function useLocalStorage<T>(key: string, initial: T) {
   function set(val: T | ((prev: T) => T)) {
     setState(prev => {
       const next = typeof val === 'function' ? (val as (p: T) => T)(prev) : val
-      try { localStorage.setItem(key, JSON.stringify(next)) } catch {}
+      try {
+        localStorage.setItem(key, JSON.stringify(next))
+      } catch {
+        // localStorage can be unavailable in restricted browser contexts.
+      }
       return next
     })
   }

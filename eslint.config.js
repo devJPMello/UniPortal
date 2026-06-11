@@ -25,7 +25,7 @@ export default tseslint.config(
     },
   },
 
-  // Arquivos de contexto exportam múltiplos itens por design — não conflita com fast refresh
+  // Arquivos de contexto exportam múltiplos itens por design e não conflitam com fast refresh
   {
     files: ['**/*Context.tsx', '**/*context.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },

@@ -38,7 +38,7 @@ export default function Boletim({ disciplinas, periodo }: Props) {
   return (
     <div className="ac-section">
       <div className="ac-section-header">
-        <h2 className="ac-section-title">Boletim — {periodo}</h2>
+        <h2 className="ac-section-title">Boletim: {periodo}</h2>
         <span className="ac-sem-badge">Semestre em Curso</span>
       </div>
 
@@ -90,13 +90,13 @@ export default function Boletim({ disciplinas, periodo }: Props) {
                   </td>
                   <td className="ac-prof">{d.professor}</td>
                   <td className={`ac-nota ${notaClass(d.av1)}`}>
-                    {d.av1 !== null ? d.av1.toFixed(1) : '—'}
+                    {d.av1 !== null ? d.av1.toFixed(1) : 'N/A'}
                   </td>
                   <td className={`ac-nota ${notaClass(d.av2)}`}>
-                    {d.av2 !== null ? d.av2.toFixed(1) : '—'}
+                    {d.av2 !== null ? d.av2.toFixed(1) : 'N/A'}
                   </td>
                   <td className={`ac-nota ac-nota-media ${notaClass(m)}`}>
-                    {m !== null ? m.toFixed(1) : '—'}
+                    {m !== null ? m.toFixed(1) : 'N/A'}
                   </td>
                   <td className="ac-ch">{d.ch}h</td>
                   <td className="ac-freq-cell">
@@ -115,7 +115,7 @@ export default function Boletim({ disciplinas, periodo }: Props) {
                           {d.faltas}/{d.totalAulas}
                         </span>
                       </div>
-                    ) : '—'}
+                    ) : 'N/A'}
                   </td>
                   <td>
                     <span className="ac-badge" style={{ color, background: bg }}>

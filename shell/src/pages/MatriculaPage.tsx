@@ -28,7 +28,7 @@ export default function MatriculaPage() {
     <div className="mfe-container">
       <div className="mfe-badge">
         <span className="mfe-badge-dot mfe-badge-dot--blue" />
-        Módulo Matrícula — carregado via <strong>Module Federation</strong>
+        Módulo Matrícula carregado via <strong>Module Federation</strong>
         &nbsp;·&nbsp; deploy independente, equipe própria
       </div>
       <MfeErrorBoundary name="Matrícula">

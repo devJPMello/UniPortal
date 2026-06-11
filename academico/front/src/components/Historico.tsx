@@ -26,7 +26,7 @@ function GradeBars({ disciplinas }: { disciplinas: Disciplina[] }) {
         const h = m !== null ? (m / 10) * 100 : 0
         const color = m === null ? '#E2E8F0' : m >= 8.5 ? '#38A169' : m >= 6 ? '#3182CE' : '#E53E3E'
         return (
-          <div key={d.codigo} className="ac-grade-bar-col" title={`${d.nome}: ${m?.toFixed(1) ?? '—'}`}>
+          <div key={d.codigo} className="ac-grade-bar-col" title={`${d.nome}: ${m?.toFixed(1) ?? 'N/A'}`}>
             <div className="ac-grade-bar-track">
               <div className="ac-grade-bar-fill" style={{ height: `${h}%`, background: color }} />
             </div>
@@ -129,10 +129,10 @@ export default function Historico({ semestres }: Props) {
                           <div className="ac-disc-code">{d.codigo}</div>
                         </td>
                         <td className="ac-prof">{d.professor}</td>
-                        <td className="ac-nota">{d.av1?.toFixed(1) ?? '—'}</td>
-                        <td className="ac-nota">{d.av2?.toFixed(1) ?? '—'}</td>
+                        <td className="ac-nota">{d.av1?.toFixed(1) ?? 'N/A'}</td>
+                        <td className="ac-nota">{d.av2?.toFixed(1) ?? 'N/A'}</td>
                         <td className="ac-nota ac-nota-media" style={{ color: mColor }}>
-                          {m?.toFixed(1) ?? '—'}
+                          {m?.toFixed(1) ?? 'N/A'}
                         </td>
                         <td className="ac-ch">{d.ch}h</td>
                         <td>

@@ -12,14 +12,14 @@ const CELL_H = 44 // px por hora
 export default function GradeHorarios({ grade, periodo }: Props) {
   return (
     <div className="mt-section">
-      <h2 className="mt-section-title">Grade de Horários — {periodo}</h2>
+      <h2 className="mt-section-title">Grade de Horários: {periodo}</h2>
 
       <div className="mt-grade-wrap">
         <div className="mt-legenda">
           {[...new Map(grade.map((a) => [a.disciplina, a])).values()].map((a) => (
             <span key={a.id} className="mt-leg-item">
               <span className="mt-leg-dot" style={{ background: a.cor }} />
-              {a.sigla} — {a.disciplina}
+              {a.sigla}: {a.disciplina}
             </span>
           ))}
         </div>
@@ -60,7 +60,7 @@ export default function GradeHorarios({ grade, periodo }: Props) {
                         title={`${aula.disciplina}\n${aula.professor}\nSala: ${aula.sala}`}
                       >
                         <span className="mt-aula-sigla">{aula.sigla}</span>
-                        <span className="mt-aula-hora">{String(aula.inicio).padStart(2,'0')}–{String(aula.inicio + aula.duracao).padStart(2,'0')}h</span>
+                        <span className="mt-aula-hora">{String(aula.inicio).padStart(2,'0')}-{String(aula.inicio + aula.duracao).padStart(2,'0')}h</span>
                         <span className="mt-aula-sala">{aula.sala}</span>
                       </div>
                     )

@@ -57,4 +57,11 @@ coverage/
 .eslintcache
 .stylelintcache
 .claude
+.codex/
+.agents/
 .github
+
+# ── Arquivos locais da apresentação ───────────────────
+Aula 14 - Arquitetura de Software - Arquitetura Micro-frontends.pdf
+DIARIO_DE_BORDO.md
+*:Zone.Identifier

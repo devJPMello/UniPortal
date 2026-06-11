@@ -18,7 +18,7 @@ function ensureEnv() {
   }
 }
 
-console.log(cyan('\n🎓 UniPortal — Iniciando monorepo Micro Frontend\n'))
+console.log(cyan('\n🎓 UniPortal: Iniciando monorepo Micro Frontend\n'))
 
 ensureEnv()
 
@@ -33,8 +33,8 @@ console.log('  Shell        →  http://localhost:3000')
 console.log('  API          →  http://localhost:4000')
 console.log('  Acadêmico    →  http://localhost:3001  (Module Federation remote)')
 console.log('  Matrícula    →  http://localhost:3002  (Module Federation remote)')
-console.log('  Biblioteca   →  http://localhost:3003  (iframe target)')
-console.log('  Financeiro   →  http://localhost:3004  (iframe target)')
+console.log('  Biblioteca   →  http://localhost:3003  (Module Federation remote)')
+console.log('  Financeiro   →  http://localhost:3004  (Module Federation remote)')
 console.log(cyan('\n🔑 Credenciais de demo: RA: 2024001 | Senha: uniportal\n'))
 
 const services = [

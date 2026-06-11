@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL as string | undefined
 export function useMatricula(token?: string) {
   const [grade,        setGrade]        = useState<Aula[]>(mockGrade)
   const [disponiveis,  setDisponiveis]  = useState<DisciplinaDisponivel[]>(mockDisponiveis)
-  const [periodoAtual, setPeriodoAtual] = useState<string>('—')
+  const [periodoAtual, setPeriodoAtual] = useState<string>('N/A')
   const [loading,      setLoading]      = useState(false)
   const [erro,         setErro]         = useState<string | null>(null)
 

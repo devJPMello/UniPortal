@@ -34,9 +34,9 @@ export const grade: Aula[] = [
 ]
 
 export const disciplinasDisponiveis: DisciplinaDisponivel[] = [
-  { codigo: 'CC501', nome: 'Inteligência Artificial',     professor: 'Prof. Dr. Rafael Moura', ch: 80, vagas: 40, vagasOcupadas: 28, horarios: 'Seg/Qua 14h–16h', prereq: 'CC401' },
-  { codigo: 'CC502', nome: 'Desenvolvimento Mobile',      professor: 'Prof. Dra. Carla Dias',  ch: 60, vagas: 35, vagasOcupadas: 30, horarios: 'Ter/Qui 10h–12h', prereq: 'CC301' },
-  { codigo: 'CC503', nome: 'Segurança da Informação',     professor: 'Prof. Dr. Bruno Alves',  ch: 60, vagas: 40, vagasOcupadas: 15, horarios: 'Sex 08h–12h',     prereq: 'CC404' },
-  { codigo: 'CC504', nome: 'Arquitetura de Software',     professor: 'Prof. Dr. Carlos Lima',  ch: 80, vagas: 30, vagasOcupadas: 29, horarios: 'Seg/Qua 16h–18h', prereq: 'CC403' },
-  { codigo: 'CC505', nome: 'Machine Learning',            professor: 'Prof. Dra. Maria Silva', ch: 80, vagas: 35, vagasOcupadas: 20, horarios: 'Ter/Qui 14h–16h', prereq: 'CC401' },
+  { codigo: 'CC501', nome: 'Inteligência Artificial',     professor: 'Prof. Dr. Rafael Moura', ch: 80, vagas: 40, vagasOcupadas: 28, horarios: 'Seg/Qua 14h-16h', prereq: 'CC401' },
+  { codigo: 'CC502', nome: 'Desenvolvimento Mobile',      professor: 'Prof. Dra. Carla Dias',  ch: 60, vagas: 35, vagasOcupadas: 30, horarios: 'Ter/Qui 10h-12h', prereq: 'CC301' },
+  { codigo: 'CC503', nome: 'Segurança da Informação',     professor: 'Prof. Dr. Bruno Alves',  ch: 60, vagas: 40, vagasOcupadas: 15, horarios: 'Sex 08h-12h',     prereq: 'CC404' },
+  { codigo: 'CC504', nome: 'Arquitetura de Software',     professor: 'Prof. Dr. Carlos Lima',  ch: 80, vagas: 30, vagasOcupadas: 29, horarios: 'Seg/Qua 16h-18h', prereq: 'CC403' },
+  { codigo: 'CC505', nome: 'Machine Learning',            professor: 'Prof. Dra. Maria Silva', ch: 80, vagas: 35, vagasOcupadas: 20, horarios: 'Ter/Qui 14h-16h', prereq: 'CC401' },
 ]

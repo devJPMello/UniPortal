@@ -28,7 +28,7 @@ export default function AcademicoPage() {
     <div className="mfe-container">
       <div className="mfe-badge">
         <span className="mfe-badge-dot mfe-badge-dot--blue" />
-        Módulo Acadêmico — carregado via <strong>Module Federation</strong>
+        Módulo Acadêmico carregado via <strong>Module Federation</strong>
         &nbsp;·&nbsp; deploy independente, equipe própria
       </div>
       <MfeErrorBoundary name="Acadêmico">

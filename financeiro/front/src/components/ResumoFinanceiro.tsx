@@ -30,7 +30,7 @@ export default function ResumoFinanceiro({ resumo, pagas, total }: Props) {
         <div className="fn-sum-card fn-sum-card--warning">
           <span className="fn-sum-icon"><Clock size={18} /></span>
           <span className="fn-sum-val fn-sum-val--sm">
-            {resumo.boletosPendentes != null ? fmt(resumo.boletosPendentes) : '—'}
+            {resumo.boletosPendentes != null ? fmt(resumo.boletosPendentes) : 'N/A'}
           </span>
           <span className="fn-sum-lbl">Pendente</span>
         </div>
